@@ -25,6 +25,7 @@ public class ClienteServiceImpl implements ClienteService{
     @Override
     public Cliente guardarCliente(Cliente cliente) {
         cliente.getPrestamos().forEach(prestamo -> {
+            prestamo.setEstado("ACTIVO");
             generarCuotas(prestamo);
         });
         return clienteRepository.save(cliente);

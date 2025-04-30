@@ -3,13 +3,11 @@ package upeu.edu.pe.admin_core_service.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import upeu.edu.pe.admin_core_service.entities.Cuota;
 import upeu.edu.pe.admin_core_service.entities.Prestamo;
  import upeu.edu.pe.admin_core_service.repository.PrestamoRepository;
+import upeu.edu.pe.admin_core_service.service.CuotaService;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +19,12 @@ import java.util.stream.Collectors;
 public class CuotaController {
 
     private PrestamoRepository prestamoRepository;
+    private final CuotaService cuotaService;
 
-    public CuotaController(PrestamoRepository prestamoRepository) {
+    public CuotaController(PrestamoRepository prestamoRepository,
+                           CuotaService cuotaService) {
         this.prestamoRepository = prestamoRepository;
+        this.cuotaService = cuotaService;
     }
 
     @Operation(summary = "Buscar cuotas existente con el id del prestamo")
@@ -36,5 +37,12 @@ public class CuotaController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @Operation(summary = "Pagar una cuota")
+    @PutMapping("/{cuotaId}/pagar")
+    public ResponseEntity<Cuota> pagarCuota(@PathVariable Long cuotaId) {
+        Cuota cuotaPagada = cuotaService.pagarCuota(cuotaId);
+        return ResponseEntity.ok(cuotaPagada);
     }
 }
