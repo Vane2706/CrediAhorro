@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+    db:
+      image: postgres:16.1
+      container_name: db-credi
+      restart: always
+      environment:
+        POSTGRES_DB: 'credi'
+        POSTGRES_USER: 'crediahorro'
+        POSTGRES_PASSWORD: 'levidv'
+      ports:
+        - '5432:5432'
+    

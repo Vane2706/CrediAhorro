@@ -1,0 +1,22 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/levidv22/configs.git
+          default-label: master
+          clone-on-start: true
+          username: levidv22
+          #password: ${GIT_TOKEN}
+          password: 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
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

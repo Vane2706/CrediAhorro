@@ -1,0 +1,29 @@
+server:
+  servlet:
+    context-path: /auth-service
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  datasource:
+    hikari:
+      connection-timeout: ${db.connection-timeout}
+      maximum-pool-size: ${db.maximum-pool-size}
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
