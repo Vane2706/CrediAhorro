@@ -8,6 +8,7 @@ import upeu.edu.pe.admin_core_service.entities.Cuota;
 import upeu.edu.pe.admin_core_service.entities.Prestamo;
  import upeu.edu.pe.admin_core_service.repository.PrestamoRepository;
 import upeu.edu.pe.admin_core_service.service.CuotaService;
+import upeu.edu.pe.admin_core_service.service.PagoAdelantadoService;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +21,14 @@ public class CuotaController {
 
     private PrestamoRepository prestamoRepository;
     private final CuotaService cuotaService;
+    private final PagoAdelantadoService pagoAdelantadoService;
 
     public CuotaController(PrestamoRepository prestamoRepository,
-                           CuotaService cuotaService) {
+                           CuotaService cuotaService,
+                           PagoAdelantadoService pagoAdelantadoService) {
         this.prestamoRepository = prestamoRepository;
         this.cuotaService = cuotaService;
+        this.pagoAdelantadoService = pagoAdelantadoService;
     }
 
     @Operation(summary = "Buscar cuotas existente con el id del prestamo")
@@ -45,4 +49,15 @@ public class CuotaController {
         Cuota cuotaPagada = cuotaService.pagarCuota(cuotaId);
         return ResponseEntity.ok(cuotaPagada);
     }
+
+    @PostMapping("/prestamos/{id}/pago-adelantado")
+    public ResponseEntity<Prestamo> aplicarPagoAdelantado(
+            @PathVariable Long id,
+            @RequestParam double monto,
+            @RequestParam String tipoReduccion
+    ) {
+        Prestamo prestamo = pagoAdelantadoService.aplicarPagoAdelantado(id, monto, tipoReduccion);
+        return ResponseEntity.ok(prestamo);
+    }
+
 }

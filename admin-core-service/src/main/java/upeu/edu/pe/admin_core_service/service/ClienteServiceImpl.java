@@ -51,13 +51,28 @@ public class ClienteServiceImpl implements ClienteService{
         prestamo.setCuotas(cuotas);
     }
 
+    //@Override
+    //public double calcularCuota(double monto, double tasa, int n) {
+    //    if (tasa == 0) {
+    //        return Math.round((monto / n) * 100.0) / 100.0;
+    //    }
+    //    double cuota = monto * (tasa * Math.pow(1 + tasa, n)) / (Math.pow(1 + tasa, n) - 1);
+    //    return Math.round(cuota * 100.0) / 100.0;
+    //}
+
     @Override
     public double calcularCuota(double monto, double tasa, int n) {
+        double cuota;
         if (tasa == 0) {
-            return Math.round((monto / n) * 100.0) / 100.0;
+            cuota = monto / n;
+        } else {
+            cuota = monto * (tasa * Math.pow(1 + tasa, n)) / (Math.pow(1 + tasa, n) - 1);
         }
-        double cuota = monto * (tasa * Math.pow(1 + tasa, n)) / (Math.pow(1 + tasa, n) - 1);
-        return Math.round(cuota * 100.0) / 100.0;
+
+        // Redondear para que el segundo decimal siempre sea 0
+        cuota = Math.round(cuota * 10) * 10.0 / 100.0;
+
+        return cuota;
     }
 
     @Override

@@ -33,6 +33,7 @@ public class PrestamoServiceImpl implements PrestamoService {
     public Prestamo crearPrestamoParaCliente(Long clienteId, Prestamo prestamo) {
         clienteRepository.findById(clienteId).ifPresent(cliente -> {
             List<Prestamo> prestamos = cliente.getPrestamos();
+            prestamo.setEstado("ACTIVO");
             generarCuotas(prestamo);
             prestamos.add(prestamo);
             clienteRepository.save(cliente);
@@ -65,7 +66,7 @@ public class PrestamoServiceImpl implements PrestamoService {
         int numeroCuotas = prestamo.getNumeroCuotas();
         LocalDate fechaInicio = prestamo.getFechaInicio();
 
-        double cuota = Math.round((monto * (tasa * Math.pow(1 + tasa, numeroCuotas)) / (Math.pow(1 + tasa, numeroCuotas) - 1)) * 100.0) / 100.0;
+        double cuota = Math.round((monto * (tasa * Math.pow(1 + tasa, numeroCuotas)) / (Math.pow(1 + tasa, numeroCuotas) - 1)) * 10) * 10.0 / 100.0;
 
         List<Cuota> cuotas = new ArrayList<>();
         for (int i = 0; i < numeroCuotas; i++) {
