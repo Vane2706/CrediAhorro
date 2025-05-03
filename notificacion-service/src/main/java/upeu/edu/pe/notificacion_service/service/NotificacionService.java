@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import upeu.edu.pe.notificacion_service.dto.BienvenidaClienteDTO;
 import upeu.edu.pe.notificacion_service.dto.NotificacionAdminDTO;
 import upeu.edu.pe.notificacion_service.dto.NotificacionClienteDTO;
+import upeu.edu.pe.notificacion_service.dto.PrestamoResumenDTO;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -32,21 +34,73 @@ public class NotificacionService {
         enviarMensajeWhatsApp(dto.getNumero(), mensaje);
     }
 
-    public void enviarMensajeBienvenida(NotificacionClienteDTO dto) {
+    public void enviarBienvenidaClienteNuevo(BienvenidaClienteDTO dto) {
+        StringBuilder mensaje = new StringBuilder();
+        mensaje.append("¡Bienvenido a *CrediAhorro*, ").append(dto.getNombreCliente()).append("! 🎉\n")
+                .append("Estos son los detalles de tus préstamos:\n\n");
+
+        int i = 1;
+        for (PrestamoResumenDTO p : dto.getPrestamos()) {
+            mensaje.append("*Préstamo ").append(i++).append(":*\n")
+                    .append("Monto: S/. ").append(p.getMonto()).append("\n")
+                    .append("Cuota mensual: S/. ").append(p.getCuotaMensual()).append("\n")
+                    .append("Meses: ").append(p.getMeses()).append("\n")
+                    .append("Inicio: ").append(p.getFechaInicio()).append("\n\n");
+        }
+
+        mensaje.append("¡Gracias por confiar en nosotros! 💚");
+
+        enviarMensajeWhatsApp(dto.getNumero(), mensaje.toString());
+    }
+
+    public void enviarMensajeNuevoPrestamo(NotificacionClienteDTO dto) {
         String mensaje = "Hola *" + dto.getNombreCliente() + "* 👋\n" +
-                "Tu préstamo fue registrado con éxito.\n" +
+                "Gracias por confiar nuevamente en *CrediAhorro* 💚.\n" +
+                "Se ha registrado un nuevo préstamo:\n\n" +
                 "*Monto:* S/. " + dto.getMonto() + "\n" +
                 "*Cuotas:* " + dto.getMeses() + "\n" +
                 "*Monto por cuota:* S/. " + dto.getCuotaMensual() + "\n" +
-                "*Inicio:* " + dto.getFechaInicio();
+                "*Inicio:* " + dto.getFechaInicio() + "\n\n" +
+                "¡Te deseamos éxito en tus proyectos! 💪";
 
         enviarMensajeWhatsApp(dto.getNumero(), mensaje);
     }
 
-    public void enviarRecordatorioPago(String numero, String nombre, LocalDate fechaPago, double monto, boolean esHoy) {
+
+
+    public void enviarRecordatorioAnticipado(String numero, String nombre, LocalDate fechaPago, double monto, int numeroCuota) {
         String mensaje = "Hola *" + nombre + "* 👋\n" +
-                (esHoy ? "Hoy debes realizar tu pago. " : "Recuerda que en 5 días debes pagar.") +
-                "\nFecha: *" + fechaPago + "*\nMonto: *S/. " + monto + "*";
+                "⏳ ¡Tu *" + numeroCuota + "° cuota* está por vencer!\n" +
+                "Fecha límite: *" + fechaPago + "*\n" +
+                "Monto: *S/. " + monto + "*\n\n" +
+                "Te recordamos que pagar puntualmente mantiene tus beneficios activos. 💚";
+
+        enviarMensajeWhatsApp(numero, mensaje);
+    }
+
+    public void enviarRecordatorioHoy(String numero, String nombre, LocalDate fechaPago, double monto, int numeroCuota) {
+        String mensaje = "📅 *¡Hoy es el día, " + nombre + "!*\n" +
+                "Debes pagar tu *" + numeroCuota + "° cuota*:\n" +
+                "Monto: *S/. " + monto + "*\n" +
+                "Fecha: *" + fechaPago + "*\n\n" +
+                "¡Gracias por tu puntualidad! 💵";
+
+        enviarMensajeWhatsApp(numero, mensaje);
+    }
+
+    public void enviarConfirmacionPagoCuota(String numero, String nombre, int numeroCuota, double monto) {
+        String mensaje = "🎉 ¡Gracias " + nombre + "!\n" +
+                "Hemos recibido el pago de tu *" + numeroCuota + "° cuota* por *S/. " + monto + "*.\n" +
+                "¡Tu compromiso es importante para nosotros! 💚";
+
+        enviarMensajeWhatsApp(numero, mensaje);
+    }
+
+    public void enviarFelicitacionFinPrestamo(String numero, String nombre) {
+        String mensaje = "🎊 ¡Felicidades " + nombre + "!\n" +
+                "Has terminado de pagar tu préstamo con éxito. 🎉\n" +
+                "Gracias por confiar en *CrediAhorro*.\n" +
+                "Esperamos poder ayudarte nuevamente pronto. 💵💚";
 
         enviarMensajeWhatsApp(numero, mensaje);
     }

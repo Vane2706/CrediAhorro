@@ -1,7 +1,11 @@
 package upeu.edu.pe.notificacion_service.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import upeu.edu.pe.notificacion_service.dto.BienvenidaClienteDTO;
 import upeu.edu.pe.notificacion_service.dto.NotificacionAdminDTO;
 import upeu.edu.pe.notificacion_service.dto.NotificacionClienteDTO;
 import upeu.edu.pe.notificacion_service.service.NotificacionService;
@@ -10,29 +14,46 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/notificar")
+@Tag(name = "Notificaciones Resource", description = "Operaciones para enviar notificaciones a clientes y administrador")
 public class NotificacionController {
 
-    @Autowired
-    private NotificacionService notificacionService;
+    private final NotificacionService notificacionService;
 
+    public NotificacionController(NotificacionService notificacionService) {
+        this.notificacionService = notificacionService;
+    }
+
+    @Operation(summary = "Enviar código de verificación al administrador")
     @PostMapping("/admin")
-    public void notificarAdmin(@RequestBody NotificacionAdminDTO dto) {
+    public ResponseEntity<Void> notificarAdmin(@RequestBody NotificacionAdminDTO dto) {
         notificacionService.enviarCodigoAdministrador(dto);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/cliente")
-    public void notificarCliente(@RequestBody NotificacionClienteDTO dto) {
-        notificacionService.enviarMensajeBienvenida(dto);
+    @Operation(summary = "Enviar mensaje de bienvenida a nuevo cliente")
+    @PostMapping("/cliente/bienvenida-nuevo")
+    public ResponseEntity<Void> bienvenidaClienteNuevo(@RequestBody BienvenidaClienteDTO dto) {
+        notificacionService.enviarBienvenidaClienteNuevo(dto);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/cliente/recordatorio")
-    public void recordatorioPago(
+    @Operation(summary = "Notificar nuevo préstamo a cliente")
+    @PostMapping("/cliente/nuevo-prestamo")
+    public ResponseEntity<Void> nuevoPrestamo(@RequestBody NotificacionClienteDTO dto) {
+        notificacionService.enviarMensajeNuevoPrestamo(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Enviar recordatorio anticipado de pago al cliente")
+    @PostMapping("/cliente/recordatorio-anticipado")
+    public ResponseEntity<Void> recordatorioAnticipado(
             @RequestParam String numero,
             @RequestParam String nombre,
             @RequestParam String fecha,
             @RequestParam double monto,
-            @RequestParam boolean hoy
+            @RequestParam int cuota
     ) {
-        notificacionService.enviarRecordatorioPago(numero, nombre, LocalDate.parse(fecha), monto, hoy);
+        notificacionService.enviarRecordatorioAnticipado(numero, nombre, LocalDate.parse(fecha), monto, cuota);
+        return ResponseEntity.ok().build();
     }
 }

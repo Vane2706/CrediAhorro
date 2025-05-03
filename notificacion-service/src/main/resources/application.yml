@@ -21,3 +21,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+whatsapp:
+  api-url: "https://graph.facebook.com/v22.0/679001748621199/messages"
+  token: "EAAu4EZAEwGAUBO30uFbUMrlu9d1CZC5YFk1VMQlQtuQkXXvgNDMYcrvE3FyocOuOKoNeOIbTpmSAzLtmCkrPxDIGtpW9UWuXKcICoeYhacZBrsDVkFSPQ87wHRSezPICRvbLI0LZBUtgwplbywOApMK4BH0plEWcNj3D3YqbS5rzciqANLoZA2fqlZAxC2nK8guAZDZD"
+  sender-number: "+15556404419"
