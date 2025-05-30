@@ -8,7 +8,7 @@ import upeu.edu.pe.admin_core_service.entities.Prestamo;
 import upeu.edu.pe.admin_core_service.service.PrestamoService;
 
 @RestController
-@RequestMapping("/prestamos")
+@RequestMapping(path = "prestamos")
 @Tag(name = "Prestamos Resource")
 public class PrestamoController {
 
@@ -19,7 +19,7 @@ public class PrestamoController {
     }
 
     @Operation(summary = "Buscar prestamo existente")
-    @GetMapping("/{id}")
+    @GetMapping(path = "{id}")
     public ResponseEntity<Prestamo> obtenerPorId(@PathVariable Long id) {
         return prestamoService.obtenerPrestamoPorId(id)
                 .map(ResponseEntity::ok)
@@ -27,19 +27,19 @@ public class PrestamoController {
     }
 
     @Operation(summary = "Crear un nuevo prestamo")
-    @PostMapping("/cliente/{clienteId}")
+    @PostMapping(path = "/cliente/{clienteId}")
     public ResponseEntity<Prestamo> crearPrestamoParaCliente(@PathVariable Long clienteId, @RequestBody Prestamo prestamo) {
         return ResponseEntity.ok(prestamoService.crearPrestamoParaCliente(clienteId, prestamo));
     }
 
     @Operation(summary = "Actulizar prestamo existente")
-    @PutMapping("/{id}")
+    @PutMapping(path = "{id}")
     public ResponseEntity<Prestamo> actualizarPrestamo(@PathVariable Long id, @RequestBody Prestamo nuevoPrestamo) {
         return ResponseEntity.ok(prestamoService.actualizarPrestamo(id, nuevoPrestamo));
     }
 
     @Operation(summary = "Eliminar prestamo existente")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = "{id}")
     public ResponseEntity<Void> eliminarPrestamo(@PathVariable Long id) {
         prestamoService.eliminarPrestamo(id);
         return ResponseEntity.noContent().build();

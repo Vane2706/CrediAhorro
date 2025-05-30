@@ -1,7 +1,6 @@
-server:
-  port: 8888
-
 spring:
+  profiles:
+    active: default
   application:
     name: config-server
 
@@ -9,14 +8,19 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/levidv22/configs.git
+          uri: https://github.com/Vane2706/Confi.git
           default-label: master
           clone-on-start: true
-          username: levidv22
-          #password: ${GIT_TOKEN}
-          password: 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
+          username: Vane2706
+          password: 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
+server:
+  port: 8888
 
 eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+    instance-id: "${spring.application.name}:${random.value}"
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/

@@ -4,6 +4,8 @@ server:
   port: 8081
 
 spring:
+  profiles:
+    active: default
   application:
     name: auth-service
 

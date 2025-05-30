@@ -2,6 +2,7 @@ package upeu.edu.pe.admin_core_service.entities;
 
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "clientes")
@@ -89,5 +90,17 @@ public class Cliente {
                 ", correo='" + correoElectronico + '\'' +
                 ", prestamos=" + prestamos +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Cliente cliente = (Cliente) o;
+        return Objects.equals(id, cliente.id) && Objects.equals(nombre, cliente.nombre) && Objects.equals(dni, cliente.dni) && Objects.equals(direccion, cliente.direccion) && Objects.equals(telefonoWhatsapp, cliente.telefonoWhatsapp) && Objects.equals(correoElectronico, cliente.correoElectronico) && Objects.equals(prestamos, cliente.prestamos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nombre, dni, direccion, telefonoWhatsapp, correoElectronico, prestamos);
     }
 }

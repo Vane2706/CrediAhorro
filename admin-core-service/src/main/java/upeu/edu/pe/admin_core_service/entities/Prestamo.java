@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "prestamos")
@@ -23,7 +24,7 @@ public class Prestamo {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "id_prestamos", referencedColumnName = "id")
-    @JsonIgnore // ⚡ Esta es la clave
+    @JsonIgnore
     private List<Cuota> cuotas;
 
     public Prestamo() {
@@ -96,5 +97,17 @@ public class Prestamo {
                 ", estado='" + estado +
                 ", cuotas='" + cuotas +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Prestamo prestamo = (Prestamo) o;
+        return Double.compare(monto, prestamo.monto) == 0 && Double.compare(tasaInteresMensual, prestamo.tasaInteresMensual) == 0 && numeroCuotas == prestamo.numeroCuotas && Objects.equals(id, prestamo.id) && Objects.equals(fechaInicio, prestamo.fechaInicio) && Objects.equals(estado, prestamo.estado) && Objects.equals(cuotas, prestamo.cuotas);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, monto, tasaInteresMensual, numeroCuotas, fechaInicio, estado, cuotas);
     }
 }

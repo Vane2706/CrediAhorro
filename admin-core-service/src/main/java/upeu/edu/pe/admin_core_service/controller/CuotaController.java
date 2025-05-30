@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/cuotas")
+@RequestMapping(path = "cuotas")
 @Tag(name = "Cuotas Resource")
 public class CuotaController {
 
@@ -32,7 +32,7 @@ public class CuotaController {
     }
 
     @Operation(summary = "Buscar cuotas existente con el id del prestamo")
-    @GetMapping("/prestamo/{prestamoId}")
+    @GetMapping(path = "/prestamo/{prestamoId}")
     public ResponseEntity<List<Cuota>> obtenerCuotasPorPrestamo(@PathVariable Long prestamoId) {
         Optional<Prestamo> prestamo = prestamoRepository.findById(prestamoId);
         if (prestamo.isPresent()) {
@@ -44,13 +44,13 @@ public class CuotaController {
     }
 
     @Operation(summary = "Pagar una cuota")
-    @PutMapping("/{cuotaId}/pagar")
+    @PutMapping(path = "/{cuotaId}/pagar")
     public ResponseEntity<Cuota> pagarCuota(@PathVariable Long cuotaId) {
         Cuota cuotaPagada = cuotaService.pagarCuota(cuotaId);
         return ResponseEntity.ok(cuotaPagada);
     }
 
-    @PostMapping("/prestamos/{id}/pago-adelantado")
+    @PostMapping(path = "/prestamos/{id}/pago-adelantado")
     public ResponseEntity<Prestamo> aplicarPagoAdelantado(
             @PathVariable Long id,
             @RequestParam double monto,

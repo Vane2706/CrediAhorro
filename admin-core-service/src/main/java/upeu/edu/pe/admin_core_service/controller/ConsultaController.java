@@ -14,7 +14,7 @@ import upeu.edu.pe.admin_core_service.service.ConsultaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/consultas")
+@RequestMapping(path = "consultas")
 @Tag(name = "Consultas de Préstamos y Cuotas")
 public class ConsultaController {
 
@@ -24,19 +24,19 @@ public class ConsultaController {
         this.consultaService = consultaService;
     }
 
-    @Operation(summary = "Listar cuotas por cliente y estado")
-    @GetMapping("/cuotas")
-    public ResponseEntity<List<Cuota>> listarCuotasPorEstado(
-            @RequestParam Long clienteId,
-            @RequestParam String estado) {
-        return ResponseEntity.ok(consultaService.obtenerCuotasPorClienteYEstado(clienteId, estado));
-    }
-
     @Operation(summary = "Listar préstamos por cliente y estado")
-    @GetMapping("/prestamos")
+    @GetMapping(path = "/prestamos")
     public ResponseEntity<List<Prestamo>> listarPrestamosPorEstado(
             @RequestParam Long clienteId,
             @RequestParam String estado) {
         return ResponseEntity.ok(consultaService.obtenerPrestamosPorClienteYEstado(clienteId, estado));
+    }
+
+    @Operation(summary = "Listar cuotas por cliente y estado")
+    @GetMapping(path = "/cuotas")
+    public ResponseEntity<List<Cuota>> listarCuotasPorEstado(
+            @RequestParam Long clienteId,
+            @RequestParam String estado) {
+        return ResponseEntity.ok(consultaService.obtenerCuotasPorClienteYEstado(clienteId, estado));
     }
 }

@@ -3,6 +3,7 @@ package upeu.edu.pe.admin_core_service.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cuotas")
@@ -59,5 +60,17 @@ public class Cuota {
                 ", montoCuota=" + montoCuota +
                 ", estado='" + estado + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Cuota cuota = (Cuota) o;
+        return Double.compare(montoCuota, cuota.montoCuota) == 0 && Objects.equals(id, cuota.id) && Objects.equals(fechaPago, cuota.fechaPago) && Objects.equals(estado, cuota.estado);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fechaPago, montoCuota, estado);
     }
 }

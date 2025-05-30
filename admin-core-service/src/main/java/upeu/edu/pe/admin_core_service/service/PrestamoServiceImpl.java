@@ -23,7 +23,6 @@ public class PrestamoServiceImpl implements PrestamoService {
         this.prestamoRepository = prestamoRepository;
         this.clienteRepository = clienteRepository;
     }
-
     @Override
     public Optional<Prestamo> obtenerPrestamoPorId(Long id) {
         return prestamoRepository.findById(id);

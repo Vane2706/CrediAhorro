@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping(path = "clientes")
 @Tag(name = "Clientes Resource")
 public class ClienteController {
 
@@ -26,7 +26,7 @@ public class ClienteController {
     }
 
     @Operation(summary = "Buscar cliente existente")
-    @GetMapping("/{id}")
+    @GetMapping(path = "{id}")
     public ResponseEntity<Cliente> obtenerClientePorId(@PathVariable Long id) {
         Optional<Cliente> cliente = clienteService.obtenerClientePorId(id);
         return cliente.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
@@ -41,14 +41,14 @@ public class ClienteController {
     }
 
     @Operation(summary = "Actulizar cliente existente")
-    @PutMapping("/{id}")
+    @PutMapping(path = "{id}")
     public ResponseEntity<Cliente> actualizarCliente(@PathVariable Long id, @RequestBody Cliente clienteActualizado) {
         Optional<Cliente> cliente = clienteService.actualizarCliente(id, clienteActualizado);
         return cliente.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "Eliminar cliente existente")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = "{id}")
     public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
         clienteService.eliminarCliente(id);
         return ResponseEntity.noContent().build();
