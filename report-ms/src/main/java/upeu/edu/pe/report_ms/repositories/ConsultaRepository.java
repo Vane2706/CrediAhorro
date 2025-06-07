@@ -15,11 +15,11 @@ import java.util.Optional;
 public interface ConsultaRepository {
 
     @GetMapping(path = "admin-service/consultas/prestamos")
-    List<Prestamo> obtenerPrestamosPorClienteYEstado(@RequestParam("clienteId") Long clienteId,
+    List<Prestamo> obtenerPrestamosPorClienteYEstado(@RequestParam("nombre") String nombre,
                                                      @RequestParam("estado") String estado);
 
     @GetMapping(path = "admin-service/consultas/cuotas")
-    List<Cuota> obtenerCuotasPorClienteYEstado(@RequestParam("clienteId") Long clienteId,
+    List<Cuota> obtenerCuotasPorClienteYEstado(@RequestParam("nombre") String nombre,
                                                @RequestParam("estado") String estado);
 }
 

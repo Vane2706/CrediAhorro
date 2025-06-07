@@ -33,6 +33,7 @@ public class PrestamoServiceImpl implements PrestamoService {
         clienteRepository.findById(clienteId).ifPresent(cliente -> {
             List<Prestamo> prestamos = cliente.getPrestamos();
             prestamo.setEstado("ACTIVO");
+            prestamo.setFechaCreacion(LocalDate.now());
             generarCuotas(prestamo);
             prestamos.add(prestamo);
             clienteRepository.save(cliente);

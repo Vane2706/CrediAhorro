@@ -1,0 +1,82 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Crear Nuevo Préstamo</h2>
+
+  <form (ngSubmit)="guardarPrestamo()" #prestamoForm="ngForm" novalidate>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="monto" class="form-label">Monto <span class="text-danger">*</span></label>
+        <input
+          type="number"
+          id="monto"
+          class="form-control"
+          [(ngModel)]="prestamo.monto"
+          name="monto"
+          step="0.01"
+          required
+          #monto="ngModel"
+        />
+        <div class="text-danger" *ngIf="monto.invalid && monto.touched">
+          El monto es obligatorio.
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="tasaInteresMensual" class="form-label">Tasa de Interés Mensual (%) <span class="text-danger">*</span></label>
+        <input
+          type="number"
+          id="tasaInteresMensual"
+          class="form-control"
+          [(ngModel)]="prestamo.tasaInteresMensual"
+          name="tasaInteresMensual"
+          step="0.01"
+          required
+          #tasa="ngModel"
+        />
+        <div class="text-danger" *ngIf="tasa.invalid && tasa.touched">
+          La tasa de interés es obligatoria.
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="numeroCuotas" class="form-label">Número de Cuotas <span class="text-danger">*</span></label>
+        <input
+          type="number"
+          id="numeroCuotas"
+          class="form-control"
+          [(ngModel)]="prestamo.numeroCuotas"
+          name="numeroCuotas"
+          required
+          #cuotas="ngModel"
+        />
+        <div class="text-danger" *ngIf="cuotas.invalid && cuotas.touched">
+          El número de cuotas es obligatorio.
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="fechaInicio" class="form-label">Fecha de Inicio <span class="text-danger">*</span></label>
+        <input
+          type="date"
+          id="fechaInicio"
+          class="form-control"
+          [(ngModel)]="prestamo.fechaInicio"
+          name="fechaInicio"
+          required
+          #fecha="ngModel"
+        />
+        <div class="text-danger" *ngIf="fecha.invalid && fecha.touched">
+          La fecha de inicio es obligatoria.
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 d-flex gap-2">
+      <button type="submit" class="btn btn-primary" [disabled]="prestamoForm.invalid">
+        <i class="bi bi-plus-circle"></i> Guardar
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancelar()">
+        <i class="bi bi-x-circle"></i> Cancelar
+      </button>
+    </div>
+  </form>
+</div>

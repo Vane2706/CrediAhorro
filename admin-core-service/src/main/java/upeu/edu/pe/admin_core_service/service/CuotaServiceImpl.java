@@ -43,12 +43,22 @@ public class CuotaServiceImpl implements CuotaService {
 
         if (prestamoOpt.isPresent()) {
             Prestamo prestamo = prestamoOpt.get();
-            boolean todasPagadas = prestamo.getCuotas().stream()
-                    .allMatch(c -> "PAGADA".equalsIgnoreCase(c.getEstado()));
-            if (todasPagadas) {
+
+            boolean todasPagadasOAdelantadas = prestamo.getCuotas().stream()
+                    .allMatch(c -> {
+                        String estado = c.getEstado().toUpperCase();
+                        return estado.equals("PAGADA") || estado.equals("ADELANTADO");
+                    });
+
+            if (todasPagadasOAdelantadas) {
                 prestamo.setEstado("PAGADO");
                 prestamoRepository.save(prestamo);
             }
         }
+    }
+
+    @Override
+    public Long findPrestamoIdByCuotaId(Long cuotaId) {
+        return cuotaRepository.findPrestamoIdByCuotaId(cuotaId);
     }
 }

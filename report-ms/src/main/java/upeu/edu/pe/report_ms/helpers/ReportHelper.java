@@ -35,7 +35,7 @@ public class ReportHelper {
                 .replace("{monto}", String.format("%.2f", p.getMonto()))
                 .replace("{tasa}", String.format("%.2f%%", p.getTasaInteresMensual()))
                 .replace("{cuotas}", String.valueOf(p.getNumeroCuotas()))
-                .replace("{fecha_inicio}", String.valueOf(p.getFechaInicio()))
+                .replace("{fecha_creacion}", String.valueOf(p.getFechaCreacion()))
                 .replace("{estado}", p.getEstado());
     }
 

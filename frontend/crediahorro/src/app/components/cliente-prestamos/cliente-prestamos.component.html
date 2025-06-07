@@ -1,0 +1,73 @@
+<main class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="mb-4">
+        Préstamos de <span class="text-primary">{{ cliente.nombre }}</span>
+      </h2>
+      <button class="btn btn-secondary mb-3" [routerLink]="['/clientes']">
+        <i class="bi bi-arrow-left-circle"></i> Volver a Clientes
+      </button>
+      <button
+        class="btn btn-success mb-3"
+        [routerLink]="['/clientes', cliente.id, 'prestamos', 'nuevo']"
+      >
+        <i class="bi bi-plus-circle"></i> Nuevo Préstamo
+      </button>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+          <tr>
+            <th>Monto</th>
+            <th>Tasa de Interés (%)</th>
+            <th>Número de Cuotas</th>
+            <th>Fecha de Creación</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let prestamo of cliente.prestamos">
+            <td>
+              {{
+              prestamo.monto
+              | currency: 'S/':'symbol':'1.2-2'
+              }}
+            </td>
+            <td>{{ prestamo.tasaInteresMensual }}%</td>
+            <td>{{ prestamo.numeroCuotas }}</td>
+            <td>{{ prestamo.fechaCreacion | date: 'dd/MM/yyyy' }}</td>
+            <td>
+              <span [ngSwitch]="prestamo.estado">
+                <span *ngSwitchCase="'PAGADO'" class="badge bg-primary">Pagado</span>
+                <span *ngSwitchCase="'ACTIVO'" class="badge bg-warning text-dark">Activo</span>
+                <span *ngSwitchDefault>{{prestamo.estado}}</span>
+              </span>
+            </td>
+            <td>
+              <a
+                class="btn btn-info btn-sm"
+                [routerLink]="['/cuotas', prestamo.id]"
+              >
+                <i class="bi bi-eye"></i> Ver Cuotas
+              </a>
+              <a
+                class="btn btn-primary btn-sm me-2"
+                [routerLink]="[
+                    '/clientes',
+                    cliente.id,
+                    'prestamos',
+                    prestamo.id,
+                    'editar'
+                  ]"
+              >
+                <i class="bi bi-pencil"></i> Editar
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>

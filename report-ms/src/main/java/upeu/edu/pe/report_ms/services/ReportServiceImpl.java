@@ -20,14 +20,14 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public String generarReportePrestamos(Long clienteId, String estado) {
-        List<Prestamo> prestamos = consultaRepository.obtenerPrestamosPorClienteYEstado(clienteId, estado);
+    public String generarReportePrestamos(String nombre, String estado) {
+        List<Prestamo> prestamos = consultaRepository.obtenerPrestamosPorClienteYEstado(nombre, estado);
         return reportHelper.formatearPrestamos(prestamos);
     }
 
     @Override
-    public String generarReporteCuotas(Long clienteId, String estado) {
-        List<Cuota> cuotas = consultaRepository.obtenerCuotasPorClienteYEstado(clienteId, estado);
+    public String generarReporteCuotas(String nombre, String estado) {
+        List<Cuota> cuotas = consultaRepository.obtenerCuotasPorClienteYEstado(nombre, estado);
         return reportHelper.formatearCuotas(cuotas);
     }
 }

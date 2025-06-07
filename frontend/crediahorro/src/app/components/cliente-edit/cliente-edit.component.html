@@ -1,0 +1,164 @@
+<main class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="mb-4">Editar Cliente</h2>
+      <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Campos cliente -->
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+          <input
+            id="nombre"
+            type="text"
+            class="form-control"
+            formControlName="nombre"
+            [class.is-invalid]="clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched"
+          />
+          <div class="invalid-feedback">
+            El nombre es obligatorio.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="dni" class="form-label">DNI <span class="text-danger">*</span></label>
+          <input
+            id="dni"
+            type="text"
+            class="form-control"
+            formControlName="dni"
+            [class.is-invalid]="clienteForm.get('dni')?.invalid && clienteForm.get('dni')?.touched"
+          />
+          <div class="invalid-feedback">
+            El DNI es obligatorio.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="direccion" class="form-label">Dirección</label>
+          <input
+            id="direccion"
+            type="text"
+            class="form-control"
+            formControlName="direccion"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="telefonoWhatsapp" class="form-label">Teléfono WhatsApp</label>
+          <input
+            id="telefonoWhatsapp"
+            type="text"
+            class="form-control"
+            formControlName="telefonoWhatsapp"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="correoElectronico" class="form-label">Correo Electrónico</label>
+          <input
+            id="correoElectronico"
+            type="email"
+            class="form-control"
+            formControlName="correoElectronico"
+          />
+        </div>
+
+        <!-- Préstamos -->
+        <h4 class="mb-3">Préstamos</h4>
+
+        <div formArrayName="prestamos">
+          <div
+            *ngFor="let prestamo of prestamos.controls; let i=index"
+            [formGroupName]="i"
+            class="border rounded p-3 mb-3 bg-light"
+          >
+            <div class="row g-3">
+              <div class="col-md-3">
+                <label class="form-label" for="monto{{i}}">Monto <span class="text-danger">*</span></label>
+                <input
+                  id="monto{{i}}"
+                  type="number"
+                  class="form-control"
+                  formControlName="monto"
+                  required
+                  [class.is-invalid]="
+                    prestamo.get('monto')?.invalid && prestamo.get('monto')?.touched
+                  "
+                />
+                <div class="invalid-feedback">Monto obligatorio</div>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label" for="tasa{{i}}">Tasa de Interés Mensual (%) <span class="text-danger">*</span></label>
+                <input
+                  id="tasa{{i}}"
+                  type="number"
+                  class="form-control"
+                  formControlName="tasaInteresMensual"
+                  required
+                  [class.is-invalid]="
+                    prestamo.get('tasaInteresMensual')?.invalid && prestamo.get('tasaInteresMensual')?.touched
+                  "
+                />
+                <div class="invalid-feedback">Tasa obligatoria</div>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label" for="cuotas{{i}}">Número de Cuotas <span class="text-danger">*</span></label>
+                <input
+                  id="cuotas{{i}}"
+                  type="number"
+                  class="form-control"
+                  formControlName="numeroCuotas"
+                  required
+                  [class.is-invalid]="
+                    prestamo.get('numeroCuotas')?.invalid && prestamo.get('numeroCuotas')?.touched
+                  "
+                />
+                <div class="invalid-feedback">Cuotas obligatorias</div>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label" for="fecha{{i}}">Fecha de Inicio <span class="text-danger">*</span></label>
+                <input
+                  id="fecha{{i}}"
+                  type="date"
+                  class="form-control"
+                  formControlName="fechaInicio"
+                  required
+                  [class.is-invalid]="
+                    prestamo.get('fechaInicio')?.invalid && prestamo.get('fechaInicio')?.touched
+                  "
+                />
+                <div class="invalid-feedback">Fecha obligatoria</div>
+              </div>
+            </div>
+
+            <div class="mt-3 text-end">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="eliminarPrestamo(i)"
+              >
+                <i class="bi bi-trash"></i> Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex gap-2 mt-3">
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="clienteForm.invalid"
+          >
+            <i class="bi bi-pencil-square"></i> Actualizar
+          </button>
+          <a class="btn btn-secondary" [routerLink]="['/clientes']">
+            <i class="bi bi-x-circle"></i> Cancelar
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>

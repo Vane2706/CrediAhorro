@@ -1,5 +1,8 @@
 package upeu.edu.pe.report_ms.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public class Cliente {
@@ -9,18 +12,21 @@ public class Cliente {
     private String direccion;
     private String telefonoWhatsapp;
     private String correoElectronico;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fechaCreacion;
     private List<Prestamo> prestamos;
 
     public Cliente() {
     }
 
-    public Cliente(Long id, String nombre, String dni, String direccion, String telefonoWhatsapp, String correoElectronico, List<Prestamo> prestamos) {
+    public Cliente(Long id, String nombre, String dni, String direccion, String telefonoWhatsapp, String correoElectronico, LocalDate fechaCreacion, List<Prestamo> prestamos) {
         this.id = id;
         this.nombre = nombre;
         this.dni = dni;
         this.direccion = direccion;
         this.telefonoWhatsapp = telefonoWhatsapp;
         this.correoElectronico = correoElectronico;
+        this.fechaCreacion = fechaCreacion;
         this.prestamos = prestamos;
     }
 
@@ -72,6 +78,14 @@ public class Cliente {
         this.correoElectronico = correoElectronico;
     }
 
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
     public String getDireccion() {
         return direccion;
     }
@@ -87,6 +101,7 @@ public class Cliente {
         private String direccion;
         private String telefonoWhatsapp;
         private String correoElectronico;
+        private LocalDate fechaCreacion;
         private List<Prestamo> prestamos;
 
         public Builder id(Long id) {
@@ -119,13 +134,18 @@ public class Cliente {
             return this;
         }
 
+        public Builder fechaCreacion(LocalDate fechaCreacion) {
+            this.fechaCreacion = fechaCreacion;
+            return this;
+        }
+
         public Builder prestamos(List<Prestamo> prestamos) {
             this.prestamos = prestamos;
             return this;
         }
 
         public Cliente build() {
-            return new Cliente(id, nombre, dni, direccion, telefonoWhatsapp, correoElectronico, prestamos);
+            return new Cliente(id, nombre, dni, direccion, telefonoWhatsapp, correoElectronico, fechaCreacion, prestamos);
         }
     }
 

@@ -1,15 +1,14 @@
 package upeu.edu.pe.admin_core_service.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import upeu.edu.pe.admin_core_service.entities.Prestamo;
 import upeu.edu.pe.admin_core_service.service.PrestamoService;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(path = "prestamos")
-@Tag(name = "Prestamos Resource")
 public class PrestamoController {
 
     private final PrestamoService prestamoService;
@@ -18,27 +17,27 @@ public class PrestamoController {
         this.prestamoService = prestamoService;
     }
 
-    @Operation(summary = "Buscar prestamo existente")
     @GetMapping(path = "{id}")
-    public ResponseEntity<Prestamo> obtenerPorId(@PathVariable Long id) {
-        return prestamoService.obtenerPrestamoPorId(id)
-                .map(ResponseEntity::ok)
+    public ResponseEntity<Prestamo> obtenerPrestamoPorId(@PathVariable Long id) {
+        Optional<Prestamo> prestamoOpt = prestamoService.obtenerPrestamoPorId(id);
+        return prestamoOpt.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Crear un nuevo prestamo")
     @PostMapping(path = "/cliente/{clienteId}")
-    public ResponseEntity<Prestamo> crearPrestamoParaCliente(@PathVariable Long clienteId, @RequestBody Prestamo prestamo) {
-        return ResponseEntity.ok(prestamoService.crearPrestamoParaCliente(clienteId, prestamo));
+    public ResponseEntity<Prestamo> crearPrestamoParaCliente(@PathVariable Long clienteId,
+                                                             @RequestBody Prestamo prestamo) {
+        Prestamo creado = prestamoService.crearPrestamoParaCliente(clienteId, prestamo);
+        return ResponseEntity.ok(creado);
     }
 
-    @Operation(summary = "Actulizar prestamo existente")
     @PutMapping(path = "{id}")
-    public ResponseEntity<Prestamo> actualizarPrestamo(@PathVariable Long id, @RequestBody Prestamo nuevoPrestamo) {
-        return ResponseEntity.ok(prestamoService.actualizarPrestamo(id, nuevoPrestamo));
+    public ResponseEntity<Prestamo> actualizarPrestamo(@PathVariable Long id,
+                                                       @RequestBody Prestamo nuevoPrestamo) {
+        Prestamo actualizado = prestamoService.actualizarPrestamo(id, nuevoPrestamo);
+        return ResponseEntity.ok(actualizado);
     }
 
-    @Operation(summary = "Eliminar prestamo existente")
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Void> eliminarPrestamo(@PathVariable Long id) {
         prestamoService.eliminarPrestamo(id);

@@ -23,9 +23,16 @@ public class ClienteServiceImpl implements ClienteService{
     }
 
     @Override
+    public List<Cliente> obtenerTodosLosClientes() {
+        return clienteRepository.findAll();
+    }
+
+    @Override
     public Cliente guardarCliente(Cliente cliente) {
+        cliente.setFechaCreacion(LocalDate.now());
         cliente.getPrestamos().forEach(prestamo -> {
             prestamo.setEstado("ACTIVO");
+            prestamo.setFechaCreacion(LocalDate.now());
             generarCuotas(prestamo);
         });
         return clienteRepository.save(cliente);
@@ -50,15 +57,6 @@ public class ClienteServiceImpl implements ClienteService{
         }
         prestamo.setCuotas(cuotas);
     }
-
-    //@Override
-    //public double calcularCuota(double monto, double tasa, int n) {
-    //    if (tasa == 0) {
-    //        return Math.round((monto / n) * 100.0) / 100.0;
-    //    }
-    //    double cuota = monto * (tasa * Math.pow(1 + tasa, n)) / (Math.pow(1 + tasa, n) - 1);
-    //    return Math.round(cuota * 100.0) / 100.0;
-    //}
 
     @Override
     public double calcularCuota(double monto, double tasa, int n) {

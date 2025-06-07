@@ -1,0 +1,55 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+      <h4>Cuotas del Préstamo</h4>
+      <div>
+        <button class="btn btn-light btn-sm" (click)="volver()">
+          <i class="bi bi-arrow-left"></i> Volver a Clientes
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div *ngIf="cuotasPendientes > 0" class="alert alert-warning">
+        ¡Atención! El cliente tiene <strong>{{cuotasPendientes}}</strong> cuota(s) pendiente(s) por pagar.
+      </div>
+      <div *ngIf="cuotasPendientes === 0" class="alert alert-success">
+        ¡Genial! Este cliente ya completó el pago de todas sus cuotas.
+      </div>
+      <table class="table table-hover">
+        <thead class="table-dark">
+        <tr>
+          <th>Fecha Pago</th>
+          <th>Monto Cuota</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let cuota of cuotas">
+          <td>{{cuota.fechaPago | date:'dd/MM/yyyy'}}</td>
+          <td>{{cuota.montoCuota | currency: 'S/':'symbol':'1.2-2'}}</td>
+          <td>
+              <span [ngSwitch]="cuota.estado">
+                <span *ngSwitchCase="'PAGADA'" class="badge bg-success">Pagada</span>
+                <span *ngSwitchCase="'PENDIENTE'" class="badge bg-warning text-dark">Pendiente</span>
+                <span *ngSwitchCase="'ADELANTADO'" class="badge bg-primary">Pago Adelantado</span>
+                <span *ngSwitchDefault>{{cuota.estado}}</span>
+              </span>
+          </td>
+          <td>
+            <button *ngIf="cuota.estado === 'PENDIENTE'" class="btn btn-success btn-sm"
+                    (click)="pagarCuota(cuota.id)">
+              <i class="bi bi-cash"></i> Pagar Cuota
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="mt-3">
+        <button class="btn btn-primary" (click)="irPagoAdelantado()">
+          <i class="bi bi-forward"></i> Pagar Adelanto
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

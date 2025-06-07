@@ -8,11 +8,19 @@ import upeu.edu.pe.admin_core_service.entities.Cuota;
 import java.util.List;
 
 public interface CuotaRepository extends JpaRepository<Cuota, Long> {
-    @Query("SELECT c FROM Cuota c WHERE c.id IN (" +
+    @Query("SELECT c FROM Cuota c " +
+            "WHERE c.id IN (" +
             "SELECT cu.id FROM Prestamo p JOIN p.cuotas cu " +
-            "WHERE p.id IN (SELECT pr.id FROM Cliente cl JOIN cl.prestamos pr WHERE cl.id = :clienteId)) " +
+            "WHERE p.id IN (" +
+            "SELECT pr.id FROM Cliente cl JOIN cl.prestamos pr " +
+            "WHERE cl.nombre = :nombre)) " +
             "AND c.estado = :estado")
-    List<Cuota> findCuotasByClienteIdAndEstado(@Param("clienteId") Long clienteId,
-                                               @Param("estado") String estado);
+    List<Cuota> findCuotasByClienteDniAndEstado(@Param("nombre") String nombre,
+                                                @Param("estado") String estado);
 
+    @Query(value = "SELECT p.id " +
+            "FROM prestamos p " +
+            "JOIN cuotas c ON p.id = c.id_prestamos " +
+            "WHERE c.id = :cuotaId", nativeQuery = true)
+    Long findPrestamoIdByCuotaId(@Param("cuotaId") Long cuotaId);
 }

@@ -22,12 +22,12 @@ public class ConsultaServiceImpl implements ConsultaService {
     }
 
     @Override
-    public List<Cuota> obtenerCuotasPorClienteYEstado(Long clienteId, String estado) {
-        return cuotaRepository.findCuotasByClienteIdAndEstado(clienteId, estado.toUpperCase());
+    public List<Cuota> obtenerCuotasPorClienteYEstado(String nombre, String estado) {
+        return cuotaRepository.findCuotasByClienteDniAndEstado(nombre, estado.toUpperCase());
     }
 
     @Override
-    public List<Prestamo> obtenerPrestamosPorClienteYEstado(Long clienteId, String estado) {
-        return prestamoRepository.findPrestamosByClienteIdAndEstado(clienteId, estado.toUpperCase());
+    public List<Prestamo> obtenerPrestamosPorClienteYEstado(String nombre, String estado) {
+        return prestamoRepository.findPrestamosByClienteDniAndEstado(nombre, estado.toUpperCase());
     }
 }

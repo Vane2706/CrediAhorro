@@ -9,7 +9,9 @@ import upeu.edu.pe.admin_core_service.repository.PrestamoRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,10 +40,10 @@ public class PagoAdelantadoServiceImpl implements PagoAdelantadoService {
             throw new RuntimeException("No hay cuotas pendientes para este préstamo.");
         }
 
-        // 1. Calcular el capital restante (no el total de las cuotas, que incluye intereses)
+        // Calcular el capital restante (no el total de las cuotas, que incluye intereses)
         double capitalRestante = calcularCapitalRestante(prestamo, tasa);
 
-        // 2. Aplicar adelanto directamente al capital
+        // Aplicar adelanto directamente al capital
         double nuevoCapital = capitalRestante - montoAdelantado;
         if (nuevoCapital < 0) {
             nuevoCapital = 0;
@@ -58,11 +60,25 @@ public class PagoAdelantadoServiceImpl implements PagoAdelantadoService {
             }
 
         } else if ("PLAZO".equalsIgnoreCase(tipoReduccion)) {
-            // Reducir número de cuotas (mantener monto de cuota)
             int nuevoNumeroCuotas = calcularNumeroCuotas(nuevoCapital, tasa, cuotaOriginal);
 
             List<Cuota> nuevasCuotas = new ArrayList<>();
-            LocalDate fechaInicio = LocalDate.now();
+
+            // Encuentra la última cuota pagada (si existe)
+            Optional<Cuota> ultimaCuotaPagada = prestamo.getCuotas().stream()
+                    .filter(c -> c.getEstado().equalsIgnoreCase("PAGADA"))
+                    .max(Comparator.comparing(Cuota::getFechaPago));
+
+            LocalDate fechaInicio;
+
+            if (ultimaCuotaPagada.isPresent()) {
+                // Empieza desde la última fecha pagada + 1 mes
+                fechaInicio = ultimaCuotaPagada.get().getFechaPago().plusMonths(1);
+            } else {
+                // Si no hay cuotas pagadas, usa la primera fecha de las cuotas pendientes
+                fechaInicio = cuotasPendientes.get(0).getFechaPago();
+            }
+
             for (int i = 0; i < nuevoNumeroCuotas; i++) {
                 Cuota nuevaCuota = new Cuota();
                 nuevaCuota.setMontoCuota(cuotaOriginal);
@@ -73,9 +89,21 @@ public class PagoAdelantadoServiceImpl implements PagoAdelantadoService {
 
             prestamo.getCuotas().removeIf(c -> c.getEstado().equalsIgnoreCase("PENDIENTE"));
             prestamo.getCuotas().addAll(nuevasCuotas);
+            //prestamo.setNumeroCuotas(nuevoNumeroCuotas);
         } else {
             throw new RuntimeException("Tipo de reducción inválido. Usa 'CUOTA' o 'PLAZO'.");
         }
+
+        // Añadimos el registro del pago adelantado en la tabla 'cuotas'
+        Cuota cuotaAdelanto = new Cuota();
+        cuotaAdelanto.setFechaPago(LocalDate.now());
+        cuotaAdelanto.setMontoCuota(montoAdelantado);
+        cuotaAdelanto.setEstado("ADELANTADO");
+        cuotaRepository.save(cuotaAdelanto);
+        prestamo.getCuotas().add(cuotaAdelanto);
+
+        // Actualizar el número de cuotas con el total de cuotas en la lista
+        prestamo.setNumeroCuotas(prestamo.getCuotas().size());
 
         return prestamoRepository.save(prestamo);
     }

@@ -9,7 +9,9 @@ public class Prestamo {
     private double monto;
     private double tasaInteresMensual;
     private int numeroCuotas;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fechaCreacion;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaInicio;
     private String estado; // ACTIVO o PAGADO
     private List<Cuota> cuotas;
@@ -17,11 +19,12 @@ public class Prestamo {
     public Prestamo() {
     }
 
-    public Prestamo(Long id, double monto, double tasaInteresMensual, int numeroCuotas, LocalDate fechaInicio, String estado, List<Cuota> cuotas) {
+    public Prestamo(Long id, double monto, double tasaInteresMensual, int numeroCuotas, LocalDate fechaCreacion, LocalDate fechaInicio, String estado, List<Cuota> cuotas) {
         this.id = id;
         this.monto = monto;
         this.tasaInteresMensual = tasaInteresMensual;
         this.numeroCuotas = numeroCuotas;
+        this.fechaCreacion = fechaCreacion;
         this.fechaInicio = fechaInicio;
         this.estado = estado;
         this.cuotas = cuotas;
@@ -59,6 +62,14 @@ public class Prestamo {
         this.numeroCuotas = numeroCuotas;
     }
 
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
     public LocalDate getFechaInicio() {
         return fechaInicio;
     }
@@ -88,6 +99,7 @@ public class Prestamo {
         private double monto;
         private double tasaInteresMensual;
         private int numeroCuotas;
+        private LocalDate fechaCreacion;
         private LocalDate fechaInicio;
         private String estado;
         private List<Cuota> cuotas;
@@ -112,6 +124,11 @@ public class Prestamo {
             return this;
         }
 
+        public Builder fechaCreacion(LocalDate fechaCreacion) {
+            this.fechaCreacion = fechaCreacion;
+            return this;
+        }
+
         public Builder fechaInicio(LocalDate fechaInicio) {
             this.fechaInicio = fechaInicio;
             return this;
@@ -128,7 +145,7 @@ public class Prestamo {
         }
 
         public Prestamo build() {
-            return new Prestamo(id, monto, tasaInteresMensual, numeroCuotas, fechaInicio, estado, cuotas);
+            return new Prestamo(id, monto, tasaInteresMensual, numeroCuotas, fechaCreacion, fechaInicio, estado, cuotas);
         }
     }
 

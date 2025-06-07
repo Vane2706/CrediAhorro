@@ -1,0 +1,51 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Lista de Clientes</h2>
+    <button class="btn btn-success" routerLink="/clientes/nuevo">
+      <i class="bi bi-plus-circle"></i> Nuevo Cliente
+    </button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+      <tr>
+        <th>Nombre</th>
+        <th>DNI</th>
+        <th>Dirección</th>
+        <th>WhatsApp</th>
+        <th>Email</th>
+        <th>Fecha de Creación</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let cliente of clientes">
+        <td>{{ cliente.nombre }}</td>
+        <td>{{ cliente.dni }}</td>
+        <td>{{ cliente.direccion }}</td>
+        <td>{{ cliente.telefonoWhatsapp }}</td>
+        <td>{{ cliente.correoElectronico }}</td>
+        <td>{{ cliente.fechaCreacion | date:'dd/MM/yyyy' }}</td>
+        <td>
+            <a
+              class="btn btn-primary btn-sm"
+              [routerLink]="['/clientes', 'prestamos', cliente.id]">
+              <i class="bi bi-book"></i> Ver Préstamos
+            </a>
+            <a
+              class="btn btn-secondary btn-sm"
+              [routerLink]="['/clientes', 'editar', cliente.id]">
+              <i class="bi bi-pencil"></i> Editar
+            </a>
+            <a
+              class="btn btn-danger btn-sm"
+              (click)="eliminarCliente(cliente.id!)">
+              <i class="bi bi-trash"></i> Eliminar
+            </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

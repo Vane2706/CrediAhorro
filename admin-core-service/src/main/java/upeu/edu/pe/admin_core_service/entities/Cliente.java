@@ -1,6 +1,9 @@
 package upeu.edu.pe.admin_core_service.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +18,10 @@ public class Cliente {
     private String direccion;
     private String telefonoWhatsapp;
     private String correoElectronico;
+
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fechaCreacion;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "id_clientes", referencedColumnName = "id")
@@ -63,6 +70,14 @@ public class Cliente {
         this.dni = dni;
     }
 
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
     public String getCorreoElectronico() {
         return correoElectronico;
     }
@@ -87,7 +102,8 @@ public class Cliente {
                 ", dni='" + dni + '\'' +
                 ", direccion='" + direccion + '\'' +
                 ", telefonoWhatsapp='" + telefonoWhatsapp + '\'' +
-                ", correo='" + correoElectronico + '\'' +
+                ", correoElectronico='" + correoElectronico + '\'' +
+                ", fechaCreacion=" + fechaCreacion +
                 ", prestamos=" + prestamos +
                 '}';
     }
@@ -96,11 +112,11 @@ public class Cliente {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Cliente cliente = (Cliente) o;
-        return Objects.equals(id, cliente.id) && Objects.equals(nombre, cliente.nombre) && Objects.equals(dni, cliente.dni) && Objects.equals(direccion, cliente.direccion) && Objects.equals(telefonoWhatsapp, cliente.telefonoWhatsapp) && Objects.equals(correoElectronico, cliente.correoElectronico) && Objects.equals(prestamos, cliente.prestamos);
+        return Objects.equals(id, cliente.id) && Objects.equals(nombre, cliente.nombre) && Objects.equals(dni, cliente.dni) && Objects.equals(direccion, cliente.direccion) && Objects.equals(telefonoWhatsapp, cliente.telefonoWhatsapp) && Objects.equals(correoElectronico, cliente.correoElectronico) && Objects.equals(fechaCreacion, cliente.fechaCreacion) && Objects.equals(prestamos, cliente.prestamos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, dni, direccion, telefonoWhatsapp, correoElectronico, prestamos);
+        return Objects.hash(id, nombre, dni, direccion, telefonoWhatsapp, correoElectronico, fechaCreacion, prestamos);
     }
 }

@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "consultas")
-@Tag(name = "Consultas de Préstamos y Cuotas")
 public class ConsultaController {
 
     private final ConsultaService consultaService;
@@ -24,19 +23,18 @@ public class ConsultaController {
         this.consultaService = consultaService;
     }
 
-    @Operation(summary = "Listar préstamos por cliente y estado")
     @GetMapping(path = "/prestamos")
     public ResponseEntity<List<Prestamo>> listarPrestamosPorEstado(
-            @RequestParam Long clienteId,
+            @RequestParam String nombre,
             @RequestParam String estado) {
-        return ResponseEntity.ok(consultaService.obtenerPrestamosPorClienteYEstado(clienteId, estado));
+        return ResponseEntity.ok(consultaService.obtenerPrestamosPorClienteYEstado(nombre, estado));
     }
 
     @Operation(summary = "Listar cuotas por cliente y estado")
     @GetMapping(path = "/cuotas")
     public ResponseEntity<List<Cuota>> listarCuotasPorEstado(
-            @RequestParam Long clienteId,
+            @RequestParam String nombre,
             @RequestParam String estado) {
-        return ResponseEntity.ok(consultaService.obtenerCuotasPorClienteYEstado(clienteId, estado));
+        return ResponseEntity.ok(consultaService.obtenerCuotasPorClienteYEstado(nombre, estado));
     }
 }
