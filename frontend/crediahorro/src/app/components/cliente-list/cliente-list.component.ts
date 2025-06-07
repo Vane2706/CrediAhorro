@@ -4,13 +4,15 @@ import { RouterModule } from '@angular/router';
 import { ClienteService, Cliente } from '../../services/cliente.service';
 import { BusquedaService } from '../../services/busqueda.service';
 import { Subscription } from 'rxjs';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-cliente-list',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './cliente-list.component.html',
-  styleUrls: ['./cliente-list.component.css']
+  styleUrls: ['./cliente-list.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ClienteListComponent implements OnInit, OnDestroy {
   clientes: Cliente[] = [];
