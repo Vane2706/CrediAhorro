@@ -4,17 +4,20 @@ import { RouterModule } from '@angular/router';
 import { ClienteService, Cliente } from '../../services/cliente.service';
 import { BusquedaService } from '../../services/busqueda.service';
 import { Subscription } from 'rxjs';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-cliente-list',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './cliente-list.component.html',
-  styleUrls: ['./cliente-list.component.css']
+  styleUrls: ['./cliente-list.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ClienteListComponent implements OnInit, OnDestroy {
   clientes: Cliente[] = [];
   busquedaSubscription!: Subscription;
+  clientesAgrupadosPorMes: { [mesAnio: string]: Cliente[] } = {}
 
   constructor(
     private clienteService: ClienteService,
@@ -35,10 +38,58 @@ export class ClienteListComponent implements OnInit, OnDestroy {
 
   cargarClientes(): void {
     this.clienteService.getClientes().subscribe(
-      data => this.clientes = data,
+      data => {
+        const clientes = data.reverse(); // Para mantener tu orden
+        this.clientes = clientes;
+        this.clientesAgrupadosPorMes = this.agruparClientesPorMes(clientes);
+      },
       error => console.error(error)
     );
   }
+
+  agruparClientesPorMes(clientes: Cliente[]): { [mesAnio: string]: Cliente[] } {
+    const agrupados: { [mesAnio: string]: Cliente[] } = {};
+
+    clientes.forEach(cliente => {
+      if (cliente.fechaCreacion) {
+        const partes = cliente.fechaCreacion.split('-');
+        const anio = partes[0];
+        const mes = parseInt(partes[1]);
+
+        const nombreMes = this.obtenerNombreMes(mes);
+        const clave = `${nombreMes} ${anio}`;
+
+        if (!agrupados[clave]) {
+          agrupados[clave] = [];
+        }
+
+        agrupados[clave].push(cliente);
+      }
+    });
+
+    return agrupados;
+  }
+
+  obtenerNombreMes(mes: number): string {
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    return meses[mes - 1];
+  }
+
+  sortByDateDesc = (a: {key: string}, b: {key: string}) => {
+    const getMonthYear = (str: string) => {
+      const [mesStr, anioStr] = str.split(' ');
+      const meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+      ];
+      return new Date(parseInt(anioStr), meses.indexOf(mesStr));
+    };
+    return getMonthYear(b.key).getTime() - getMonthYear(a.key).getTime();
+  };
+
 
   eliminarCliente(id: number): void {
     this.clienteService.eliminarCliente(id).subscribe(
@@ -78,7 +129,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
     }
 
     if (!found) {
-      alert("No se encontró ningún cliente con ese nombre o DNI.");
+      alert("No se encontró ningún cliente con ese nombre.");
     }
   }
 

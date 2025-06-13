@@ -19,5 +19,8 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
     @EntityGraph(attributePaths = "cuotas")
     Optional<Prestamo> findById(Long id);
 
+    @Query("SELECT p FROM Prestamo p")
+    List<Prestamo> findAllPrestamos();
+
 }
 

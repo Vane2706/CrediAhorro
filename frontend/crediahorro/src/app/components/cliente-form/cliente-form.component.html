@@ -36,25 +36,35 @@
     </div>
 
     <div class="mb-3">
-      <label for="direccion" class="form-label">Dirección</label>
+      <label for="direccion" class="form-label">Dirección <span class="text-danger">*</span></label>
       <input
         type="text"
         id="direccion"
         class="form-control"
         [(ngModel)]="cliente.direccion"
         name="direccion"
+        required
+        #direccion="ngModel"
       />
+      <div class="text-danger" *ngIf="direccion.invalid && direccion.touched">
+        La dirección es obligatorio.
+      </div>
     </div>
 
     <div class="mb-3">
-      <label for="telefonoWhatsapp" class="form-label">WhatsApp</label>
+      <label for="telefonoWhatsapp" class="form-label">N° WhatsApp <span class="text-danger">*</span></label>
       <input
         type="text"
         id="telefonoWhatsapp"
         class="form-control"
         [(ngModel)]="cliente.telefonoWhatsapp"
         name="telefonoWhatsapp"
+        required
+        #telefonoWhatsapp="ngModel"
       />
+      <div class="text-danger" *ngIf="telefonoWhatsapp.invalid && telefonoWhatsapp.touched">
+        El N° de Whatsapp es obligatorio.
+      </div>
     </div>
 
     <div class="mb-4">

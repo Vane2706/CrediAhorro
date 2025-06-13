@@ -9,6 +9,7 @@ import { EditarPrestamoComponent } from './components/editar-prestamo/editar-pre
 import { CuotaListComponent } from './components/cuota-list/cuota-list.component';
 import { CuotaPagoAdelantadoComponent } from './components/cuota-pago-adelantado/cuota-pago-adelantado.component';
 import { ReporteComponent } from './components/reporte/reporte.component';
+import { DashboardGraficosComponent } from './components/dashboard-graficos/dashboard-graficos.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/clientes', pathMatch: 'full' },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'cuotas/:prestamoId', component: CuotaListComponent },
   { path: 'cuotas/:prestamoId/pago-adelantado', component: CuotaPagoAdelantadoComponent },
   { path: 'reportes', component: ReporteComponent },
+  { path: 'graficos', component: DashboardGraficosComponent },
   { path: '**', redirectTo: '/clientes' }
 ];
 

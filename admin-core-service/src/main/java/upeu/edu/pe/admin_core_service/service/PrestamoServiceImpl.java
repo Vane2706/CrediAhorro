@@ -29,6 +29,11 @@ public class PrestamoServiceImpl implements PrestamoService {
     }
 
     @Override
+    public List<Prestamo> obtenerTodos() {
+        return prestamoRepository.findAllPrestamos();
+    }
+
+    @Override
     public Prestamo crearPrestamoParaCliente(Long clienteId, Prestamo prestamo) {
         clienteRepository.findById(clienteId).ifPresent(cliente -> {
             List<Prestamo> prestamos = cliente.getPrestamos();

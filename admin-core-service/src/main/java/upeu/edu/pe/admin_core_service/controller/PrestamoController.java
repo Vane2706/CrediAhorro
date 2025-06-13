@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import upeu.edu.pe.admin_core_service.entities.Prestamo;
 import upeu.edu.pe.admin_core_service.service.PrestamoService;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,6 +23,11 @@ public class PrestamoController {
         Optional<Prestamo> prestamoOpt = prestamoService.obtenerPrestamoPorId(id);
         return prestamoOpt.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(path = "/all")
+    public List<Prestamo> getTodosLosPrestamos() {
+        return prestamoService.obtenerTodos();
     }
 
     @PostMapping(path = "/cliente/{clienteId}")

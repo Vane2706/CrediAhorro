@@ -38,13 +38,18 @@ import { BusquedaService } from './services/busqueda.service'; // Ajusta la ruta
                       Reportes
                     </a>
                   </li>
+                  <li class="nav-item">
+                                      <a class="nav-link" routerLink="/graficos" routerLinkActive="active">
+                                        Gráficos
+                                      </a>
+                                    </li>
                 </ul>
             <form class="d-flex ms-auto" (submit)="onBuscarCliente($event)">
               <input
                 class="form-control me-2"
                 id="buscadorInput"
                 type="search"
-                placeholder="Buscar Nombre o DNI"
+                placeholder="Buscar Nombre"
                 aria-label="Search"
               />
               <button class="btn btn-outline-light" type="submit">
