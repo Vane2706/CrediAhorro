@@ -10,7 +10,8 @@
   [showXAxisLabel]="showXAxisLabel"
   [xAxisLabel]="xAxisLabel"
   [showYAxisLabel]="showYAxisLabel"
-  [yAxisLabel]="yAxisLabel">
+  [yAxisLabel]="yAxisLabel"
+  (select)="onBarSelect($event)">
 </ngx-charts-bar-vertical>
 
 <h2>Reporte Mensual</h2>
@@ -25,7 +26,8 @@
   [showXAxisLabel]="showXAxisLabel"
   [xAxisLabel]="xAxisLabel"
   [showYAxisLabel]="showYAxisLabel"
-  [yAxisLabel]="yAxisLabel">
+  [yAxisLabel]="yAxisLabel"
+  (select)="onBarSelect($event)">
 </ngx-charts-bar-vertical>
 
 <h2>Reporte Anual</h2>
@@ -40,5 +42,15 @@
   [showXAxisLabel]="showXAxisLabel"
   [xAxisLabel]="xAxisLabel"
   [showYAxisLabel]="showYAxisLabel"
-  [yAxisLabel]="yAxisLabel">
+  [yAxisLabel]="yAxisLabel"
+  (select)="onBarSelect($event)">
 </ngx-charts-bar-vertical>
+
+<!-- Modal -->
+<div *ngIf="showModal" class="modal-overlay" (click)="showModal = false">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <p><strong>Periodo:</strong> {{ selectedData?.name }}</p>
+    <p><strong>Cantidad:</strong> {{ selectedData?.value }}</p>
+    <button (click)="showModal = false">Cerrar</button>
+  </div>
+</div>

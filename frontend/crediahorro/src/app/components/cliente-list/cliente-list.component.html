@@ -33,13 +33,13 @@
           <td>{{ cliente.correoElectronico }}</td>
           <td>
             <a class="btn btn-primary btn-sm" [routerLink]="['/clientes', 'prestamos', cliente.id]">
-              <i class="bi bi-book"></i>
+              <i class="bi bi-book"></i> Préstamo
             </a>
             <a class="btn btn-secondary btn-sm" [routerLink]="['/clientes', 'editar', cliente.id]">
-              <i class="bi bi-pencil"></i>
+              <i class="bi bi-pencil"></i> Editar
             </a>
             <a class="btn btn-danger btn-sm" (click)="eliminarCliente(cliente.id!)">
-              <i class="bi bi-trash"></i>
+              <i class="bi bi-trash"></i> Eliminar
             </a>
           </td>
         </tr>

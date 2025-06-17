@@ -3,13 +3,15 @@ import { ReportGraficoService } from '../../services/report-grafico.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard-graficos',
   standalone: true,
   imports: [CommonModule, RouterModule, NgxChartsModule ],
   templateUrl: './dashboard-graficos.component.html',
-  styleUrls: ['./dashboard-graficos.component.css']
+  styleUrls: ['./dashboard-graficos.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DashboardGraficosComponent implements OnInit {
   semanalData: any[] = [];
@@ -35,6 +37,8 @@ export class DashboardGraficosComponent implements OnInit {
     domain: ['#7aa3e5', '#a8385d', '#aae3f5', '#A58ABF', '#E3B075', '#FFF293', '#C9DC92', '#E07C3E']
   };
 
+  selectedData: any = null;
+  showModal: boolean = false;
   constructor(private reportService: ReportGraficoService) {}
 
   ngOnInit(): void {
@@ -65,4 +69,8 @@ export class DashboardGraficosComponent implements OnInit {
     }));
   }
 
+  onBarSelect(event: any): void {
+    this.selectedData = event;
+    this.showModal = true;
+    }
 }
