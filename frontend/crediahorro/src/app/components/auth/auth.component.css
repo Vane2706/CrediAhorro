@@ -1,0 +1,95 @@
+/* Fondo general para el formulario */
+body {
+  background: linear-gradient(135deg, #f0f4ff, #ffffff);
+  min-height: 100vh;
+}
+
+/* Tarjeta principal */
+.card {
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.015);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Título del formulario */
+.card h3 {
+  color: #004aad;
+  font-weight: 600;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: 0.5px;
+  animation: fadeInDown 0.6s ease;
+}
+
+/* Inputs */
+input.form-control {
+  border-radius: 10px;
+  border: 1px solid #d0d7e2;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  background-color: #f9f9f9;
+}
+
+input.form-control:focus {
+  border-color: #0069d9;
+  box-shadow: 0 0 0 0.25rem rgba(0, 105, 217, 0.2);
+  background-color: #ffffff;
+}
+
+/* Efecto hover en inputs */
+input.form-control:hover {
+  background-color: #f0f4fa;
+}
+
+/* Botón principal */
+button.btn-primary {
+  background: linear-gradient(135deg, #0069d9, #0051b0);
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 105, 217, 0.3);
+}
+
+button.btn-primary:hover {
+  background: linear-gradient(135deg, #0051b0, #003d91);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 90, 200, 0.4);
+}
+
+/* Botón de alternar modo */
+.toggle-btn {
+  color: #0069d9;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+  text-decoration: underline;
+  color: #003d91;
+  transform: scale(1.05);
+}
+
+/* Mensaje de error */
+.text-danger {
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}

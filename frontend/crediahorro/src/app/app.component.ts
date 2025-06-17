@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { RouterModule } from '@angular/router';
-import { BusquedaService } from './services/busqueda.service'; // Ajusta la ruta según tu estructura
+import { RouterModule, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { BusquedaService } from './services/busqueda.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule],
+  imports: [RouterOutlet, RouterModule, CommonModule ],
   template: `
     <div class="d-flex flex-column min-vh-100">
       <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <nav *ngIf="!isAuthRoute()" class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
           <a class="navbar-brand" routerLink="/clientes">
             <i class="bi bi-cash-stack me-2"></i>CrediAhorro
@@ -27,24 +29,23 @@ import { BusquedaService } from './services/busqueda.service'; // Ajusta la ruta
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link" routerLink="/clientes" routerLinkActive="active">
-                      Clientes
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" routerLink="/reportes" routerLinkActive="active">
-                      Reportes
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                                      <a class="nav-link" routerLink="/graficos" routerLinkActive="active">
-                                        Gráficos
-                                      </a>
-                                    </li>
-                </ul>
-            <form class="d-flex ms-auto" (submit)="onBuscarCliente($event)">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/clientes" routerLinkActive="active">Clientes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/reportes" routerLinkActive="active">Reportes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/graficos" routerLinkActive="active">Gráficos</a>
+              </li>
+            </ul>
+
+            <form
+              class="d-flex me-3"
+              *ngIf="isClientesRoute()"
+              (submit)="onBuscarCliente($event)"
+            >
               <input
                 class="form-control me-2"
                 id="buscadorInput"
@@ -56,6 +57,15 @@ import { BusquedaService } from './services/busqueda.service'; // Ajusta la ruta
                 <i class="bi bi-search"></i>
               </button>
             </form>
+
+
+            <!-- Usuario en sesión -->
+            <div *ngIf="username" class="text-light me-3">
+              <i class="bi bi-person-circle me-1"></i>{{ username }}
+            </div>
+            <button *ngIf="username" class="btn btn-outline-light" (click)="cerrarSesion()">
+              <i class="bi bi-box-arrow-right me-1"></i>
+            </button>
           </div>
         </div>
       </nav>
@@ -66,7 +76,7 @@ import { BusquedaService } from './services/busqueda.service'; // Ajusta la ruta
       </main>
 
       <!-- Footer -->
-      <footer class="bg-dark text-light py-3">
+      <footer *ngIf="!isAuthRoute()" class="bg-dark text-light py-3">
         <div class="container text-center">
           <p class="mb-1">&copy; 2025 CrediAdmin. Todos los derechos reservados.</p>
           <div class="d-flex justify-content-center">
@@ -81,8 +91,35 @@ import { BusquedaService } from './services/busqueda.service'; // Ajusta la ruta
   `,
   styles: []
 })
-export class AppComponent {
-  constructor(private busquedaService: BusquedaService) {}
+export class AppComponent implements OnInit {
+  username: string | null = null;
+  currentUrl: string = '';
+
+  constructor(
+    private busquedaService: BusquedaService,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.router.events.subscribe(() => {
+      this.currentUrl = this.router.url;
+    });
+  }
+
+  ngOnInit(): void {
+    this.currentUrl = this.router.url;
+
+    this.authService.username$.subscribe(nombre => {
+      this.username = nombre;
+    });
+  }
+
+  isClientesRoute(): boolean {
+    return this.currentUrl === '/clientes';
+  }
+
+  isAuthRoute(): boolean {
+    return this.currentUrl === '/auth';
+  }
 
   onBuscarCliente(event: Event) {
     event.preventDefault();
@@ -92,4 +129,10 @@ export class AppComponent {
       this.busquedaService.buscar(value);
     }
   }
+
+  cerrarSesion() {
+    this.authService.logout();
+    this.router.navigate(['/auth']);
+  }
 }
+

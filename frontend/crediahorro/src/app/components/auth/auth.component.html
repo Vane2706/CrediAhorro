@@ -1,0 +1,86 @@
+<div class="container mt-5">
+  <div class="card shadow rounded p-4 mx-auto" style="max-width: 400px;">
+    <h3 class="text-center mb-3">{{ isLoginMode ? 'Iniciar Sesión' : 'Registrarse' }}</h3>
+
+    <form (ngSubmit)="onSubmit()" novalidate>
+      <!-- Usuario -->
+      <div class="mb-3" *ngIf="isLoginMode; else registerUsername">
+        <label for="usernameLogin" class="form-label">Usuario</label>
+        <input type="text" id="usernameLogin" [(ngModel)]="loginData.username" name="loginUsername" class="form-control" required>
+      </div>
+      <ng-template #registerUsername>
+        <label for="usernameRegister" class="form-label">Usuario</label>
+        <input type="text" id="usernameRegister" [(ngModel)]="registerData.username" name="registerUsername" class="form-control" required>
+      </ng-template>
+
+      <!-- WhatsApp solo en registro -->
+      <div class="mb-3" *ngIf="!isLoginMode">
+        <label for="whatsapp" class="form-label">Número de WhatsApp</label>
+        <input type="number" id="whatsapp" [(ngModel)]="registerData.whatsapp" name="whatsapp" class="form-control" required>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="mb-3" *ngIf="isLoginMode; else registerPassword">
+        <label for="passwordLogin" class="form-label">Contraseña</label>
+        <div class="input-group">
+          <input
+            [type]="showPasswordLogin ? 'text' : 'password'"
+            id="passwordLogin"
+            [(ngModel)]="loginData.password"
+            name="loginPassword"
+            class="form-control"
+            required
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="togglePasswordVisibility('login')"
+            tabindex="-1"
+          >
+            <i class="bi" [ngClass]="showPasswordLogin ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+      </div>
+
+      <ng-template #registerPassword>
+        <label for="passwordRegister" class="form-label">Contraseña</label>
+        <div class="input-group">
+          <input
+            [type]="showPasswordRegister ? 'text' : 'password'"
+            id="passwordRegister"
+            [(ngModel)]="registerData.password"
+            name="registerPassword"
+            class="form-control"
+            required
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="togglePasswordVisibility('register')"
+            tabindex="-1"
+          >
+            <i class="bi" [ngClass]="showPasswordRegister ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+      </ng-template>
+
+
+      <br>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">
+          {{ isLoginMode ? 'Ingresar' : 'Registrar' }}
+        </button>
+      </div>
+
+      <div class="text-danger mt-3 text-center" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+    </form>
+
+    <div class="text-center mt-3">
+      <button class="btn btn-link toggle-btn" (click)="toggleMode()">
+        {{ isLoginMode ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión' }}
+      </button>
+    </div>
+  </div>
+</div>
