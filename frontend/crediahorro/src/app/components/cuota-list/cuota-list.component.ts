@@ -17,6 +17,12 @@ export class CuotaListComponent implements OnInit {
   cuotas: Cuota[] = [];
   prestamoId!: number;
   cuotasPendientes: number = 0;
+  totalAPagar: number = 0;
+  totalPagado: number = 0;
+  faltaPagar: number = 0;
+
+  showModal: boolean = false;
+  cuotaSeleccionada: Cuota | null = null;
 
   constructor(
     private cuotaService: CuotaService,
@@ -33,6 +39,14 @@ export class CuotaListComponent implements OnInit {
     this.cuotaService.getCuotasByPrestamo(this.prestamoId).subscribe(data => {
       this.cuotas = data.cuotas;
       this.cuotasPendientes = data.cuotasPendientes;
+
+      this.totalAPagar = this.cuotas.reduce((sum, c) => sum + c.montoCuota, 0);
+      this.totalPagado = this.cuotas
+        .filter(c => c.estado === 'PAGADA')
+        .reduce((sum, c) => sum + c.montoCuota, 0);
+      this.faltaPagar = this.cuotas
+        .filter(c => c.estado === 'PENDIENTE')
+        .reduce((sum, c) => sum + c.montoCuota, 0);
     });
   }
 
@@ -48,5 +62,24 @@ export class CuotaListComponent implements OnInit {
 
   volver() {
     this.router.navigate(['/clientes']);
+  }
+
+  abrirModal(cuota: Cuota): void {
+    this.cuotaSeleccionada = cuota;
+    this.showModal = true;
+  }
+
+  cerrarModal(): void {
+    this.showModal = false;
+    this.cuotaSeleccionada = null;
+  }
+
+  pagarAvanzado(tipo: string): void {
+    if (!this.cuotaSeleccionada) return;
+
+    this.cuotaService.pagarCuotaAvanzado(this.cuotaSeleccionada.id, tipo).subscribe(() => {
+      this.loadCuotas();
+      this.cerrarModal();
+    });
   }
 }

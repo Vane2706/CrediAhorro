@@ -7,6 +7,7 @@ import upeu.edu.pe.admin_core_service.entities.Prestamo;
 import upeu.edu.pe.admin_core_service.repository.CuotaRepository;
 import upeu.edu.pe.admin_core_service.repository.PrestamoRepository;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class CuotaServiceImpl implements CuotaService {
 
         cuota.setEstado("PAGADA");
         cuota.setTipoPago("Pagó Completo");
+        cuota.setFechaPagada(LocalDate.now());
         cuotaRepository.save(cuota);
 
         // Revisar si todas las cuotas del préstamo están pagadas
@@ -88,12 +90,17 @@ public class CuotaServiceImpl implements CuotaService {
             nuevoMonto = interes;
             cuota.setTipoPago("Pagó Interés");
 
+        } else if (tipoPago.equalsIgnoreCase("Completo")) {
+            nuevoMonto = capital + interes;
+            cuota.setTipoPago("Pagó Completo");
+
         } else {
             throw new IllegalArgumentException("Tipo de pago inválido");
         }
 
         cuota.setMontoCuota(nuevoMonto);
         cuota.setEstado("PAGADA");
+        cuota.setFechaPagada(LocalDate.now());
         cuotaRepository.save(cuota);
 
         actualizarEstadoPrestamoSiEsNecesario(cuota);

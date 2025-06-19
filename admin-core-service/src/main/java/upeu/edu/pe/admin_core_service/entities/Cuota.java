@@ -19,6 +19,8 @@ public class Cuota {
     private double interes;
     private String estado; // PENDIENTE o PAGADA
     private String tipoPago; // Pagó Capital, Pagó Interés, Pagó Completo
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fechaPagada;
 
     public Cuota() {
     }
@@ -79,6 +81,14 @@ public class Cuota {
         this.tipoPago = tipoPago;
     }
 
+    public LocalDate getFechaPagada() {
+        return fechaPagada;
+    }
+
+    public void setFechaPagada(LocalDate fechaPagada) {
+        this.fechaPagada = fechaPagada;
+    }
+
     @Override
     public String toString() {
         return "Cuota{" +
@@ -89,6 +99,7 @@ public class Cuota {
                 ", interes=" + interes +
                 ", estado='" + estado + '\'' +
                 ", tipoPago='" + tipoPago + '\'' +
+                ", fechaPagada=" + fechaPagada +
                 '}';
     }
 
@@ -96,11 +107,11 @@ public class Cuota {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Cuota cuota = (Cuota) o;
-        return Double.compare(montoCuota, cuota.montoCuota) == 0 && Double.compare(capital, cuota.capital) == 0 && Double.compare(interes, cuota.interes) == 0 && Objects.equals(id, cuota.id) && Objects.equals(fechaPago, cuota.fechaPago) && Objects.equals(estado, cuota.estado) && Objects.equals(tipoPago, cuota.tipoPago);
+        return Double.compare(montoCuota, cuota.montoCuota) == 0 && Double.compare(capital, cuota.capital) == 0 && Double.compare(interes, cuota.interes) == 0 && Objects.equals(id, cuota.id) && Objects.equals(fechaPago, cuota.fechaPago) && Objects.equals(estado, cuota.estado) && Objects.equals(tipoPago, cuota.tipoPago) && Objects.equals(fechaPagada, cuota.fechaPagada);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fechaPago, montoCuota, capital, interes, estado, tipoPago);
+        return Objects.hash(id, fechaPago, montoCuota, capital, interes, estado, tipoPago, fechaPagada);
     }
 }

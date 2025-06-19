@@ -7,7 +7,11 @@ export interface Cuota {
   id: number;
   fechaPago: string;
   montoCuota: number;
+  capital: number;
+  interes: number;
   estado: string;
+  tipoPago: string;
+  fechaPagada: string;
 }
 
 @Injectable({
@@ -32,6 +36,12 @@ export class CuotaService {
         monto: monto.toString(),
         tipoReduccion
       }
+    });
+  }
+
+  pagarCuotaAvanzado(cuotaId: number, tipoPago: string): Observable<Cuota> {
+    return this.http.post<Cuota>(`${this.baseUrl}/${cuotaId}/pagar-avanzado`, null, {
+      params: { tipoPago }
     });
   }
 }
