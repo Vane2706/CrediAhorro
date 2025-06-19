@@ -3,13 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CuotaService } from '../../services/cuota.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-cuota-pago-adelantado',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './cuota-pago-adelantado.component.html',
-  styleUrls: ['./cuota-pago-adelantado.component.css']
+  styleUrls: ['./cuota-pago-adelantado.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CuotaPagoAdelantadoComponent implements OnInit {
   prestamoId!: number;

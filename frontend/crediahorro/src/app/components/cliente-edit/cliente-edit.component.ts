@@ -4,13 +4,15 @@ import { Cliente, Prestamo, ClienteService } from '../../services/cliente.servic
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-cliente-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './cliente-edit.component.html',
-  styleUrls: ['./cliente-edit.component.css']
+  styleUrls: ['./cliente-edit.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ClienteEditComponent implements OnInit {
   clienteForm!: FormGroup;

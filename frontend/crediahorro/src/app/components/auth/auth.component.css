@@ -1,95 +1,83 @@
-/* Fondo general para el formulario */
 body {
-  background: linear-gradient(135deg, #f0f4ff, #ffffff);
+  background: linear-gradient(-45deg, #e3f2fd, #fce4ec, #f3e5f5, #e8f5e9);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   min-height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-/* Tarjeta principal */
-.card {
-  border: none;
-  background-color: #ffffff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
 }
 
-.card:hover {
-  transform: scale(1.015);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+.auth-wrapper {
+  min-height: 100vh;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/* Título del formulario */
-.card h3 {
-  color: #004aad;
-  font-weight: 600;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  letter-spacing: 0.5px;
-  animation: fadeInDown 0.6s ease;
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: fadeIn 0.5s ease-in;
 }
 
-/* Inputs */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 input.form-control {
-  border-radius: 10px;
-  border: 1px solid #d0d7e2;
-  transition: all 0.3s ease;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  padding-left: 2.75rem;
   background-color: #f9f9f9;
+  border: 1px solid #d0d7e2;
+  transition: 0.3s ease;
 }
 
 input.form-control:focus {
   border-color: #0069d9;
-  box-shadow: 0 0 0 0.25rem rgba(0, 105, 217, 0.2);
+  box-shadow: 0 0 0 0.25rem rgba(0, 105, 217, 0.25);
   background-color: #ffffff;
 }
 
-/* Efecto hover en inputs */
-input.form-control:hover {
-  background-color: #f0f4fa;
+.input-icon {
+  position: absolute;
+  top: 38px;
+  left: 15px;
+  color: #6c757d;
+  font-size: 1.1rem;
 }
 
-/* Botón principal */
 button.btn-primary {
-  background: linear-gradient(135deg, #0069d9, #0051b0);
+  background: linear-gradient(135deg, #0069d9, #003d91);
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 105, 217, 0.3);
+  box-shadow: 0 4px 14px rgba(0, 105, 217, 0.3);
+  transition: 0.3s ease;
 }
 
 button.btn-primary:hover {
-  background: linear-gradient(135deg, #0051b0, #003d91);
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 90, 200, 0.4);
+  background: linear-gradient(135deg, #0051b0, #002f6c);
 }
 
-/* Botón de alternar modo */
 .toggle-btn {
+  font-size: 0.95rem;
   color: #0069d9;
   font-weight: 500;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .toggle-btn:hover {
-  text-decoration: underline;
   color: #003d91;
-  transform: scale(1.05);
-}
-
-/* Mensaje de error */
-.text-danger {
-  font-size: 0.9rem;
-  font-weight: 500;
-  animation: fadeIn 0.3s ease-in;
-}
-
-/* Animaciones */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-15px); }
-  to { opacity: 1; transform: translateY(0); }
+  text-decoration: underline;
 }

@@ -3,13 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CuotaService, Cuota } from '../../services/cuota.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-cuota-list',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './cuota-list.component.html',
-  styleUrls: ['./cuota-list.component.css']
+  styleUrls: ['./cuota-list.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CuotaListComponent implements OnInit {
   cuotas: Cuota[] = [];

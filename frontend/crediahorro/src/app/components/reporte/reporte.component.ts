@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ReportService } from '../../services/report.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-reporte',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './reporte.component.html',
-  styleUrls: ['./reporte.component.css']
+  styleUrls: ['./reporte.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ReporteComponent implements OnInit {
   nombre: string = '';

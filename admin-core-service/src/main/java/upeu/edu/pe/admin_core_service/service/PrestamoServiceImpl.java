@@ -74,10 +74,16 @@ public class PrestamoServiceImpl implements PrestamoService {
         double cuota = Math.round((monto * (tasa * Math.pow(1 + tasa, numeroCuotas)) / (Math.pow(1 + tasa, numeroCuotas) - 1)) * 10) * 10.0 / 100.0;
 
         List<Cuota> cuotas = new ArrayList<>();
+        double saldoPendiente = monto;
         for (int i = 0; i < numeroCuotas; i++) {
+            double interes = saldoPendiente * tasa;
+            double capital = cuota - interes;
+            saldoPendiente -= capital;
             Cuota c = new Cuota();
             c.setFechaPago(fechaInicio.plusMonths(i));
             c.setMontoCuota(cuota);
+            c.setCapital(Math.round(capital * 100.0) / 100.0);
+            c.setInteres(Math.round(interes * 100.0) / 100.0);
             c.setEstado("PENDIENTE");
             cuotas.add(c);
         }

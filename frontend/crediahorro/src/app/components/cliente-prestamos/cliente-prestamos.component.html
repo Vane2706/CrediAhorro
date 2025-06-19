@@ -1,58 +1,73 @@
 <main class="container mt-4">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h2 class="mb-4">
-        Préstamos de <span class="text-primary">{{ cliente.nombre }}</span>
+  <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+      <h2 class="fw-bold text-dark m-0">
+        <i class="bi bi-cash-stack"></i> Préstamos de
+        <span class="text-primary">{{ cliente.nombre }}</span>
       </h2>
-      <button class="btn btn-secondary mb-3" [routerLink]="['/clientes']">
-        <i class="bi bi-arrow-left-circle"></i> Volver a Clientes
-      </button>
-      <button
-        class="btn btn-success mb-3"
-        [routerLink]="['/clientes', cliente.id, 'prestamos', 'nuevo']"
-      >
-        <i class="bi bi-plus-circle"></i> Nuevo Préstamo
-      </button>
 
-      <div class="table-responsive">
-        <table class="table table-striped table-hover">
-          <thead class="table-dark">
-          <tr>
-            <th>Monto</th>
-            <th>Tasa de Interés (%)</th>
-            <th>Número de Cuotas</th>
-            <th>Fecha de Creación</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let prestamo of cliente.prestamos">
-            <td>
-              {{
-              prestamo.monto
-              | currency: 'S/':'symbol':'1.2-2'
-              }}
-            </td>
-            <td>{{ prestamo.tasaInteresMensual }}%</td>
-            <td>{{ prestamo.numeroCuotas }}</td>
-            <td>{{ prestamo.fechaCreacion | date: 'dd/MM/yyyy' }}</td>
-            <td>
-              <span [ngSwitch]="prestamo.estado">
-                <span *ngSwitchCase="'PAGADO'" class="badge bg-primary">Pagado</span>
-                <span *ngSwitchCase="'ACTIVO'" class="badge bg-warning text-dark">Activo</span>
-                <span *ngSwitchDefault>{{prestamo.estado}}</span>
-              </span>
-            </td>
-            <td>
-              <a
-                class="btn btn-info btn-sm"
-                [routerLink]="['/cuotas', prestamo.id]"
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" [routerLink]="['/clientes']">
+          <i class="bi bi-arrow-left-circle-fill"></i> Volver
+        </button>
+        <button
+          class="btn btn-success"
+          [routerLink]="['/clientes', cliente.id, 'prestamos', 'nuevo']"
+        >
+          <i class="bi bi-plus-circle-fill"></i> Nuevo Préstamo
+        </button>
+      </div>
+    </div>
+
+    <div class="table-responsive rounded-3 shadow-sm">
+      <table class="table align-middle table-hover table-borderless bg-white rounded overflow-hidden">
+        <thead class="bg-gradient text-white" style="background: linear-gradient(to right, #4e54c8, #8f94fb);">
+        <tr>
+          <th class="text-center">Monto</th>
+          <th class="text-center">Interés (%)</th>
+          <th class="text-center">Cuotas</th>
+          <th class="text-center">Creación</th>
+          <th class="text-center">Estado</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let prestamo of cliente.prestamos" class="border-bottom">
+          <td class="text-center fw-semibold text-success">
+            {{ prestamo.monto | currency: 'S/':'symbol':'1.2-2' }}
+          </td>
+          <td class="text-center">{{ prestamo.tasaInteresMensual }}%</td>
+          <td class="text-center">{{ prestamo.numeroCuotas }}</td>
+          <td class="text-center">{{ prestamo.fechaCreacion | date: 'dd/MM/yyyy' }}</td>
+          <td class="text-center">
+              <span class="badge px-3 py-2 fs-6 rounded-pill"
+                    [ngClass]="{
+                  'bg-success': prestamo.estado === 'PAGADO',
+                  'bg-warning text-dark': prestamo.estado === 'ACTIVO',
+                  'bg-secondary': prestamo.estado !== 'PAGADO' && prestamo.estado !== 'ACTIVO'
+                }"
               >
-                <i class="bi bi-eye"></i> Cuotas
+                <i
+                  [ngClass]="{
+                    'bi bi-check-circle-fill': prestamo.estado === 'PAGADO',
+                    'bi bi-hourglass-split': prestamo.estado === 'ACTIVO',
+                    'bi bi-info-circle': prestamo.estado !== 'PAGADO' && prestamo.estado !== 'ACTIVO'
+                  }"
+                ></i>
+                {{ prestamo.estado }}
+              </span>
+          </td>
+          <td class="text-center">
+            <div class="d-flex justify-content-center gap-2">
+              <a
+                class="btn btn-outline-info btn-sm"
+                [routerLink]="['/cuotas', prestamo.id]"
+                title="Ver cuotas"
+              >
+                <i class="bi bi-eye-fill"></i> Ver cuotas
               </a>
               <a
-                class="btn btn-primary btn-sm me-2"
+                class="btn btn-outline-primary btn-sm"
                 [routerLink]="[
                     '/clientes',
                     cliente.id,
@@ -60,14 +75,15 @@
                     prestamo.id,
                     'editar'
                   ]"
+                title="Editar préstamo"
               >
-                <i class="bi bi-pencil"></i> Editar
+                <i class="bi bi-pencil-square"></i> Editar préstamo
               </a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </main>

@@ -15,7 +15,10 @@ public class Cuota {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaPago;
     private double montoCuota;
+    private double capital;
+    private double interes;
     private String estado; // PENDIENTE o PAGADA
+    private String tipoPago; // Pagó Capital, Pagó Interés, Pagó Completo
 
     public Cuota() {
     }
@@ -52,13 +55,40 @@ public class Cuota {
         this.montoCuota = montoCuota;
     }
 
+    public double getCapital() {
+        return capital;
+    }
+
+    public void setCapital(double capital) {
+        this.capital = capital;
+    }
+
+    public double getInteres() {
+        return interes;
+    }
+
+    public void setInteres(double interes) {
+        this.interes = interes;
+    }
+
+    public String getTipoPago() {
+        return tipoPago;
+    }
+
+    public void setTipoPago(String tipoPago) {
+        this.tipoPago = tipoPago;
+    }
+
     @Override
     public String toString() {
         return "Cuota{" +
                 "id=" + id +
                 ", fechaPago=" + fechaPago +
                 ", montoCuota=" + montoCuota +
+                ", capital=" + capital +
+                ", interes=" + interes +
                 ", estado='" + estado + '\'' +
+                ", tipoPago='" + tipoPago + '\'' +
                 '}';
     }
 
@@ -66,11 +96,11 @@ public class Cuota {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Cuota cuota = (Cuota) o;
-        return Double.compare(montoCuota, cuota.montoCuota) == 0 && Objects.equals(id, cuota.id) && Objects.equals(fechaPago, cuota.fechaPago) && Objects.equals(estado, cuota.estado);
+        return Double.compare(montoCuota, cuota.montoCuota) == 0 && Double.compare(capital, cuota.capital) == 0 && Double.compare(interes, cuota.interes) == 0 && Objects.equals(id, cuota.id) && Objects.equals(fechaPago, cuota.fechaPago) && Objects.equals(estado, cuota.estado) && Objects.equals(tipoPago, cuota.tipoPago);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fechaPago, montoCuota, estado);
+        return Objects.hash(id, fechaPago, montoCuota, capital, interes, estado, tipoPago);
     }
 }

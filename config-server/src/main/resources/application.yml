@@ -12,7 +12,7 @@ spring:
           default-label: master
           clone-on-start: true
           username: Vane2706
-          password: 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
+          password: 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
           #password: ${GIT_TOKEN}
 server:
   port: 8888

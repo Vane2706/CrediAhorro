@@ -1,55 +1,66 @@
-<div class="container mt-4">
-  <div class="card shadow">
-    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-      <h4>Cuotas del Préstamo</h4>
-      <div>
-        <button class="btn btn-light btn-sm" (click)="volver()">
-          <i class="bi bi-arrow-left"></i> Volver a Clientes
-        </button>
-      </div>
+<main class="container mt-4">
+  <div class="card shadow-lg border-0 rounded-4 bg-light">
+    <div class="card-header bg-gradient text-white d-flex justify-content-between align-items-center rounded-top-4"
+         style="background: linear-gradient(to right, #4e73df, #1cc88a);">
+      <h4 class="m-0" style="color: black;">
+        <i class="bi bi-calendar-check-fill"></i> Cuotas del Préstamo
+      </h4>
+      <button class="btn btn-light btn-sm" (click)="volver()">
+        <i class="bi bi-arrow-left-circle"></i> Volver a Clientes
+      </button>
     </div>
+
     <div class="card-body">
-      <div *ngIf="cuotasPendientes > 0" class="alert alert-warning">
-        ¡Atención! El cliente tiene <strong>{{cuotasPendientes}}</strong> cuota(s) pendiente(s) por pagar.
+      <!-- Mensajes de estado -->
+      <div *ngIf="cuotasPendientes > 0" class="alert alert-warning d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        El cliente tiene <strong>{{cuotasPendientes}}</strong> cuota(s) pendiente(s) por pagar.
       </div>
-      <div *ngIf="cuotasPendientes === 0" class="alert alert-success">
+      <div *ngIf="cuotasPendientes === 0" class="alert alert-success d-flex align-items-center gap-2">
+        <i class="bi bi-check-circle-fill"></i>
         ¡Genial! Este cliente ya completó el pago de todas sus cuotas.
       </div>
-      <table class="table table-hover">
-        <thead class="table-dark">
-        <tr>
-          <th>Fecha Pago</th>
-          <th>Monto Cuota</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let cuota of cuotas">
-          <td>{{cuota.fechaPago | date:'dd/MM/yyyy'}}</td>
-          <td>{{cuota.montoCuota | currency: 'S/':'symbol':'1.2-2'}}</td>
-          <td>
-              <span [ngSwitch]="cuota.estado">
-                <span *ngSwitchCase="'PAGADA'" class="badge bg-success">Pagada</span>
-                <span *ngSwitchCase="'PENDIENTE'" class="badge bg-warning text-dark">Pendiente</span>
-                <span *ngSwitchCase="'ADELANTADO'" class="badge bg-primary">Pago Adelantado</span>
-                <span *ngSwitchDefault>{{cuota.estado}}</span>
-              </span>
-          </td>
-          <td>
-            <button *ngIf="cuota.estado === 'PENDIENTE'" class="btn btn-success btn-sm"
-                    (click)="pagarCuota(cuota.id)">
-              <i class="bi bi-cash"></i> Pagar Cuota
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <div class="mt-3">
-        <button class="btn btn-primary" (click)="irPagoAdelantado()">
-          <i class="bi bi-forward"></i> Pagar Adelanto
+
+      <!-- Tabla de cuotas -->
+      <div class="table-responsive rounded-3">
+        <table class="table table-hover align-middle text-center">
+          <thead class="table-dark">
+          <tr>
+            <th><i class="bi bi-calendar-event"></i> Fecha Pago</th>
+            <th>S/ Monto Cuota</th>
+            <th><i class="bi bi-clipboard-check"></i> Estado</th>
+            <th><i class="bi bi-gear-fill"></i> Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let cuota of cuotas">
+            <td>{{ cuota.fechaPago | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ cuota.montoCuota | currency: 'S/':'symbol':'1.2-2' }}</td>
+            <td>
+                <span [ngSwitch]="cuota.estado">
+                  <span *ngSwitchCase="'PAGADA'" class="badge rounded-pill bg-success px-3 py-2">Pagada</span>
+                  <span *ngSwitchCase="'PENDIENTE'" class="badge rounded-pill bg-warning text-dark px-3 py-2">Pendiente</span>
+                  <span *ngSwitchCase="'ADELANTADO'" class="badge rounded-pill bg-primary px-3 py-2">Adelantado</span>
+                  <span *ngSwitchDefault class="badge bg-secondary">{{ cuota.estado }}</span>
+                </span>
+            </td>
+            <td>
+              <button *ngIf="cuota.estado === 'PENDIENTE'" class="btn btn-success btn-sm px-3"
+                      (click)="pagarCuota(cuota.id)">
+                <i class="bi bi-cash-coin"></i> Pagar
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pago Adelantado -->
+      <div class="mt-4 d-flex justify-content-end">
+        <button class="btn btn-outline-primary" (click)="irPagoAdelantado()">
+          <i class="bi bi-forward-fill"></i> Pagar Adelanto
         </button>
       </div>
     </div>
   </div>
-</div>
+</main>

@@ -70,4 +70,11 @@ public class CuotaController {
         pagoAdelantadoService.aplicarPagoAdelantado(prestamoId, monto, tipoReduccion);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping(path = "/{cuotaId}/pagar-avanzado")
+    public ResponseEntity<Cuota> pagarCuotaAvanzado(@PathVariable Long cuotaId,
+                                                    @RequestParam String tipoPago) {
+        Cuota cuota = cuotaService.pagarCuotaAvanzado(cuotaId, tipoPago);
+        return ResponseEntity.ok(cuota);
+    }
 }

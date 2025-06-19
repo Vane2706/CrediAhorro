@@ -99,11 +99,11 @@ export class ClienteListComponent implements OnInit, OnDestroy {
   }
 
   buscarCliente(searchValue: string): void {
-    const rows = document.querySelectorAll("tbody tr");
+    const cards = document.querySelectorAll('.cliente-card');
     let found = false;
 
     // Eliminar resaltados anteriores
-    const resaltados = document.querySelectorAll(".resaltado");
+    const resaltados = document.querySelectorAll('.resaltado');
     resaltados.forEach(span => {
       const parent = span.parentNode;
       if (parent) {
@@ -112,31 +112,31 @@ export class ClienteListComponent implements OnInit, OnDestroy {
       }
     });
 
-    for (const row of rows) {
-      const nombreCell = (row as HTMLTableRowElement).cells[0];
-      const dniCell = (row as HTMLTableRowElement).cells[1];
+    for (const card of cards) {
+      const nombreElement = card.querySelector('.card-title');
+      const dniElement = card.querySelector('p:nth-of-type(1) strong'); // primer <p> con <strong>
 
-      const nombreText = nombreCell.textContent?.toLowerCase() || '';
-      const dniText = dniCell.textContent?.toLowerCase() || '';
+      const nombreText = nombreElement?.textContent?.toLowerCase() || '';
+      const dniText = dniElement?.textContent?.toLowerCase() || '';
 
-      if (nombreText.includes(searchValue.toLowerCase()) || dniText.includes(searchValue.toLowerCase())) {
+      if (nombreText.includes(searchValue) || dniText.includes(searchValue)) {
+        this.highlightText(nombreElement as HTMLElement, searchValue);
+        this.highlightText(dniElement?.parentElement as HTMLElement, searchValue);
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
         found = true;
-        this.highlightText(nombreCell, searchValue);
-        this.highlightText(dniCell, searchValue);
-        row.scrollIntoView({ behavior: "smooth", block: "center" });
-        break; // Solo al primer resultado
+        break; // Solo resalta el primer resultado
       }
     }
 
     if (!found) {
-      alert("No se encontró ningún cliente con ese nombre.");
+      alert("No se encontró ningún cliente con ese nombre o DNI.");
     }
   }
 
-  highlightText(cell: HTMLTableCellElement, searchValue: string) {
-    const text = cell.textContent || '';
+  highlightText(element: HTMLElement, searchValue: string) {
+    const text = element.textContent || '';
     const regex = new RegExp(`(${searchValue})`, 'ig');
     const highlightedText = text.replace(regex, `<span class="resaltado">$1</span>`);
-    cell.innerHTML = highlightedText;
+    element.innerHTML = highlightedText;
   }
 }

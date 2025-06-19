@@ -63,7 +63,7 @@ import { AuthService } from './services/auth.service';
             <div *ngIf="username" class="text-light me-3">
               <i class="bi bi-person-circle me-1"></i>{{ username }}
             </div>
-            <button *ngIf="username" class="btn btn-outline-light" (click)="cerrarSesion()">
+            <button *ngIf="username" class="btn btn-outline-light" (click)="cerrarSesion()" title="Cerrar Sesión">
               <i class="bi bi-box-arrow-right me-1"></i>
             </button>
           </div>
@@ -78,7 +78,7 @@ import { AuthService } from './services/auth.service';
       <!-- Footer -->
       <footer *ngIf="!isAuthRoute()" class="bg-dark text-light py-3">
         <div class="container text-center">
-          <p class="mb-1">&copy; 2025 CrediAdmin. Todos los derechos reservados.</p>
+          <p class="mb-1">&copy; 2025 CrediAhorro. Todos los derechos reservados.</p>
           <div class="d-flex justify-content-center">
             <a href="#" class="text-light mx-2"><i class="bi bi-facebook"></i></a>
             <a href="#" class="text-light mx-2"><i class="bi bi-instagram"></i></a>
@@ -89,7 +89,105 @@ import { AuthService } from './services/auth.service';
       </footer>
     </div>
   `,
-  styles: []
+  styles: [`
+    nav.navbar {
+      background: linear-gradient(135deg, #004aad, #0069d9);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s ease;
+    }
+
+    nav.navbar:hover {
+      background: linear-gradient(135deg, #003d91, #005ac0);
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.3rem;
+      color: #fff !important;
+      transition: transform 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+      transform: scale(1.05);
+    }
+
+    .navbar-nav .nav-link {
+      color: #e6ecff !important;
+      font-weight: 500;
+      margin-right: 10px;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #ffffff !important;
+      transform: translateY(-2px);
+    }
+
+    .navbar-nav .nav-link.active {
+      color: #ffffff !important;
+      border-bottom: 2px solid #ffffff;
+    }
+
+    .form-control:focus {
+      border-color: #ffffff;
+      box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-outline-light {
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-light:hover {
+      background-color: #ffffff;
+      color: #004aad;
+      border-color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .bi {
+      vertical-align: middle;
+    }
+
+    footer {
+      background: linear-gradient(135deg, #004aad, #002b5c);
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #d6e0f5;
+    }
+
+    footer a {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #ffffff;
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+      .navbar-nav .nav-link {
+        margin: 8px 0;
+        text-align: center;
+      }
+
+      .form-control {
+        margin-bottom: 8px;
+      }
+
+      .navbar-collapse {
+        background-color: rgba(0, 74, 173, 0.95);
+        padding: 1rem;
+        border-radius: 8px;
+      }
+    }
+  `]
 })
 export class AppComponent implements OnInit {
   username: string | null = null;

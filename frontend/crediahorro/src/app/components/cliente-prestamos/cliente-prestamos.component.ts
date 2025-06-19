@@ -3,13 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Cliente, ClienteService } from '../../services/cliente.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-cliente-prestamos',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './cliente-prestamos.component.html',
-  styleUrls: ['./cliente-prestamos.component.css']
+  styleUrls: ['./cliente-prestamos.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ClientePrestamosComponent implements OnInit {
   cliente: Cliente = {

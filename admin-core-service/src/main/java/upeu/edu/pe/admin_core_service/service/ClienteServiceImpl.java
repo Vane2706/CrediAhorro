@@ -48,10 +48,16 @@ public class ClienteServiceImpl implements ClienteService{
         double cuota = calcularCuota(monto, tasa, numeroCuotas);
 
         List<Cuota> cuotas = new ArrayList<>();
+        double saldoPendiente = monto;
         for (int i = 0; i < numeroCuotas; i++) {
+            double interes = saldoPendiente * tasa;
+            double capital = cuota - interes;
+            saldoPendiente -= capital;
             Cuota nuevaCuota = new Cuota();
             nuevaCuota.setFechaPago(fechaInicio.plusMonths(i));
             nuevaCuota.setMontoCuota(cuota);
+            nuevaCuota.setCapital(Math.round(capital * 100.0) / 100.0);
+            nuevaCuota.setInteres(Math.round(interes * 100.0) / 100.0);
             nuevaCuota.setEstado("PENDIENTE");
             cuotas.add(nuevaCuota);
         }

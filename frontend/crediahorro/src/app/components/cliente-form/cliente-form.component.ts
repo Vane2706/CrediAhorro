@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { ClienteService, Cliente, Prestamo } from '../../services/cliente.service';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-cliente-form',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './cliente-form.component.html',
-  styleUrls: ['./cliente-form.component.css']
+  styleUrls: ['./cliente-form.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ClienteFormComponent {
   cliente: Cliente = {

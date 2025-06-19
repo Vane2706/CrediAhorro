@@ -3,13 +3,15 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrestamoService, Prestamo } from '../../services/prestamo.service';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-editar-prestamo',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './editar-prestamo.component.html',
-  styleUrls: ['./editar-prestamo.component.css']
+  styleUrls: ['./editar-prestamo.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class EditarPrestamoComponent {
   prestamo!: Prestamo;

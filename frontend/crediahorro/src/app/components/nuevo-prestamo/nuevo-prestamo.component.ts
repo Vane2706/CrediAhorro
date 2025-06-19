@@ -3,13 +3,15 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrestamoService, Prestamo } from '../../services/prestamo.service';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-nuevo-prestamo',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './nuevo-prestamo.component.html',
-  styleUrls: ['./nuevo-prestamo.component.css']
+  styleUrls: ['./nuevo-prestamo.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class NuevoPrestamoComponent {
   prestamo: Prestamo = {

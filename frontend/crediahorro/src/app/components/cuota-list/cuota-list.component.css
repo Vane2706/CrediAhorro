@@ -1,0 +1,18 @@
+.table thead th {
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.9rem;
+}
+
+.card-header h4 {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}

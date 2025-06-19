@@ -7,6 +7,8 @@ import upeu.edu.pe.admin_core_service.entities.Prestamo;
 import upeu.edu.pe.admin_core_service.repository.CuotaRepository;
 import upeu.edu.pe.admin_core_service.repository.PrestamoRepository;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +29,7 @@ public class CuotaServiceImpl implements CuotaService {
                 .orElseThrow(() -> new RuntimeException("Cuota no encontrada"));
 
         cuota.setEstado("PAGADA");
+        cuota.setTipoPago("Pagó Completo");
         cuotaRepository.save(cuota);
 
         // Revisar si todas las cuotas del préstamo están pagadas
@@ -60,5 +63,61 @@ public class CuotaServiceImpl implements CuotaService {
     @Override
     public Long findPrestamoIdByCuotaId(Long cuotaId) {
         return cuotaRepository.findPrestamoIdByCuotaId(cuotaId);
+    }
+
+    @Override
+    public Cuota pagarCuotaAvanzado(Long cuotaId, String tipoPago) {
+        Cuota cuota = cuotaRepository.findById(cuotaId)
+                .orElseThrow(() -> new RuntimeException("Cuota no encontrada"));
+
+        if (cuota.getEstado().equalsIgnoreCase("PAGADA")) {
+            throw new IllegalStateException("Esta cuota ya está pagada");
+        }
+
+        double capital = cuota.getCapital();
+        double interes = cuota.getInteres();
+        double nuevoMonto = 0.0;
+
+        if (tipoPago.equalsIgnoreCase("Capital")) {
+            pasarAProximaCuota(cuotaId, "interes", interes);
+            nuevoMonto = capital;
+            cuota.setTipoPago("Pagó Capital");
+
+        } else if (tipoPago.equalsIgnoreCase("Interes")) {
+            pasarAProximaCuota(cuotaId, "capital", capital);
+            nuevoMonto = interes;
+            cuota.setTipoPago("Pagó Interés");
+
+        } else {
+            throw new IllegalArgumentException("Tipo de pago inválido");
+        }
+
+        cuota.setMontoCuota(nuevoMonto);
+        cuota.setEstado("PAGADA");
+        cuotaRepository.save(cuota);
+
+        actualizarEstadoPrestamoSiEsNecesario(cuota);
+        return cuota;
+    }
+
+    private void pasarAProximaCuota(Long cuotaId, String tipo, double montoTransferir) {
+        Cuota actual = cuotaRepository.findById(cuotaId).orElseThrow();
+        Long prestamoId = findPrestamoIdByCuotaId(cuotaId);
+
+        Prestamo prestamo = prestamoRepository.findById(prestamoId).orElseThrow();
+        List<Cuota> cuotas = prestamo.getCuotas();
+
+        cuotas.sort(Comparator.comparing(Cuota::getFechaPago));
+        int index = cuotas.indexOf(actual);
+        if (index + 1 < cuotas.size()) {
+            Cuota siguiente = cuotas.get(index + 1);
+            if (tipo.equals("capital")) {
+                siguiente.setCapital(siguiente.getCapital() + montoTransferir);
+            } else {
+                siguiente.setInteres(siguiente.getInteres() + montoTransferir);
+            }
+            siguiente.setMontoCuota(siguiente.getCapital() + siguiente.getInteres());
+            cuotaRepository.save(siguiente);
+        }
     }
 }
