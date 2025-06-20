@@ -35,7 +35,7 @@ export interface Cliente {
   fechaCreacion?: string;
   prestamos?: Prestamo[];
   estadoPrestamoMasReciente?: string;
-  cuotaPendienteHoy?: boolean;
+  cuotaPendienteTexto?: string;
 }
 
 

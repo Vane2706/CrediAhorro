@@ -40,10 +40,10 @@ export class ClienteListComponent implements OnInit, OnDestroy {
     this.clienteService.getClientes().subscribe(
       data => {
         const clientes = data.reverse();
-        const hoy = new Date().toISOString().slice(0, 10); // formato yyyy-MM-dd
+        const hoyDate = new Date();
 
         clientes.forEach(cliente => {
-          cliente.cuotaPendienteHoy = false;
+          cliente.cuotaPendienteTexto = '';
 
           if (cliente.prestamos && cliente.prestamos.length > 0) {
             const prestamosOrdenados = [...cliente.prestamos].sort((a, b) => {
@@ -53,13 +53,27 @@ export class ClienteListComponent implements OnInit, OnDestroy {
             const prestamoMasReciente = prestamosOrdenados[0];
             cliente.estadoPrestamoMasReciente = prestamoMasReciente.estado;
 
-            // Buscar cuota pendiente con fecha de pago = hoy
             if (prestamoMasReciente.cuotas) {
-              const cuotaParaHoy = prestamoMasReciente.cuotas.find(cuota =>
-                cuota.fechaPago === hoy && cuota.estado === 'PENDIENTE'
-              );
-              if (cuotaParaHoy) {
-                cliente.cuotaPendienteHoy = true;
+              // Encuentra la próxima cuota pendiente dentro del rango de 7 días
+              const cuotaCercana = prestamoMasReciente.cuotas.find(cuota => {
+                if (cuota.estado !== 'PENDIENTE') return false;
+
+                const fechaPagoDate = new Date(cuota.fechaPago);
+                const diffTime = fechaPagoDate.getTime() - hoyDate.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                return diffDays >= 0 && diffDays <= 7;
+              });
+
+              if (cuotaCercana) {
+                const fechaPagoDate = new Date(cuotaCercana.fechaPago);
+                const diffDays = Math.ceil((fechaPagoDate.getTime() - hoyDate.getTime()) / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 0) {
+                  cliente.cuotaPendienteTexto = 'Hoy vence una cuota';
+                } else {
+                  cliente.cuotaPendienteTexto = `En ${diffDays} día${diffDays === 1 ? '' : 's'} vence una cuota`;
+                }
               }
             }
 
