@@ -54,25 +54,33 @@ export class ClienteListComponent implements OnInit, OnDestroy {
             cliente.estadoPrestamoMasReciente = prestamoMasReciente.estado;
 
             if (prestamoMasReciente.cuotas) {
-              // Encuentra la próxima cuota pendiente dentro del rango de 7 días
+              // 🟡 Buscamos la próxima cuota pendiente en los próximos 7 días
               const cuotaCercana = prestamoMasReciente.cuotas.find(cuota => {
                 if (cuota.estado !== 'PENDIENTE') return false;
-
                 const fechaPagoDate = new Date(cuota.fechaPago);
                 const diffTime = fechaPagoDate.getTime() - hoyDate.getTime();
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
                 return diffDays >= 0 && diffDays <= 7;
               });
 
               if (cuotaCercana) {
                 const fechaPagoDate = new Date(cuotaCercana.fechaPago);
                 const diffDays = Math.ceil((fechaPagoDate.getTime() - hoyDate.getTime()) / (1000 * 60 * 60 * 24));
+                cliente.cuotaPendienteTexto =
+                  diffDays === 0 ? 'Hoy vence una cuota' :
+                  `En ${diffDays} día${diffDays === 1 ? '' : 's'} vence una cuota`;
+              } else {
+                // 🟡 Si NO hay cuota en los próximos 7 días, revisamos si hay alguna VENCIDA
+                const cuotaVencida = prestamoMasReciente.cuotas.find(cuota => {
+                  if (cuota.estado !== 'PENDIENTE') return false;
+                  const fechaPagoDate = new Date(cuota.fechaPago);
+                  return fechaPagoDate.getTime() < hoyDate.getTime();
+                });
 
-                if (diffDays === 0) {
-                  cliente.cuotaPendienteTexto = 'Hoy vence una cuota';
-                } else {
-                  cliente.cuotaPendienteTexto = `En ${diffDays} día${diffDays === 1 ? '' : 's'} vence una cuota`;
+                if (cuotaVencida) {
+                  const fechaPagoDate = new Date(cuotaVencida.fechaPago);
+                  const diffDays = Math.floor((hoyDate.getTime() - fechaPagoDate.getTime()) / (1000 * 60 * 60 * 24));
+                  cliente.cuotaPendienteTexto = `Venció una cuota hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
                 }
               }
             }
