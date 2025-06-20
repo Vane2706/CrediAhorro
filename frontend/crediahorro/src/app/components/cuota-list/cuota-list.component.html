@@ -11,14 +11,25 @@
     </div>
 
     <div class="card-body">
-      <!-- Mensajes de estado -->
-      <div *ngIf="cuotasPendientes > 0" class="alert alert-warning d-flex align-items-center gap-2">
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        El cliente tiene <strong>{{cuotasPendientes}}</strong> cuota(s) pendiente(s) por pagar.
-      </div>
-      <div *ngIf="cuotasPendientes === 0" class="alert alert-success d-flex align-items-center gap-2">
-        <i class="bi bi-check-circle-fill"></i>
-        ¡Genial! Este cliente ya completó el pago de todas sus cuotas.
+      <!-- Contenedor padre que coloca las alertas a izquierda y derecha -->
+      <div class="d-flex justify-content-between mb-3">
+        <!-- Alerta a la izquierda -->
+        <div *ngIf="mensajeVencimiento" class="alert alert-danger d-flex align-items-center gap-2 mb-0">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          {{ mensajeVencimiento }}
+        </div>
+
+        <!-- Alerta a la derecha -->
+        <div>
+          <div *ngIf="cuotasPendientes > 0" class="alert alert-warning d-flex align-items-center gap-2 mb-0">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            El cliente tiene <strong>{{ cuotasPendientes }}</strong> cuota{{ cuotasPendientes === 1 ? '' : 's' }} pendiente{{ cuotasPendientes === 1 ? '' : 's' }} por pagar.
+          </div>
+          <div *ngIf="cuotasPendientes === 0" class="alert alert-success d-flex align-items-center gap-2 mb-0">
+            <i class="bi bi-check-circle-fill"></i>
+            ¡Genial! Este cliente ya completó el pago de todas sus cuotas.
+          </div>
+        </div>
       </div>
 
       <!-- Tabla de cuotas -->

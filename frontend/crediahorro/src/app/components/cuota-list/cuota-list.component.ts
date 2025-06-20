@@ -20,7 +20,7 @@ export class CuotaListComponent implements OnInit {
   totalAPagar: number = 0;
   totalPagado: number = 0;
   faltaPagar: number = 0;
-
+  mensajeVencimiento: string = '';
   showModal: boolean = false;
   cuotaSeleccionada: Cuota | null = null;
 
@@ -41,13 +41,52 @@ export class CuotaListComponent implements OnInit {
       this.cuotasPendientes = data.cuotasPendientes;
 
       this.totalAPagar = this.cuotas.reduce((sum, c) => sum + c.montoCuota, 0);
-      this.totalPagado = this.cuotas
-        .filter(c => c.estado === 'PAGADA')
+      this.totalPagado = this.cuotas.filter(c => c.estado === 'PAGADA')
         .reduce((sum, c) => sum + c.montoCuota, 0);
-      this.faltaPagar = this.cuotas
-        .filter(c => c.estado === 'PENDIENTE')
+      this.faltaPagar = this.cuotas.filter(c => c.estado === 'PENDIENTE')
         .reduce((sum, c) => sum + c.montoCuota, 0);
+      this.mensajeVencimiento = '';
+      const hoy = new Date();
+
+      // Ordenamos las cuotas por fechaPago
+      const cuotasOrdenadas = [...this.cuotas].sort((a, b) => new Date(a.fechaPago).getTime() - new Date(b.fechaPago).getTime());
+
+      // Busca la primera pendiente en los próximos 7 días
+      const cuotaProxima = cuotasOrdenadas.find((cuota) => {
+        if (cuota.estado !== 'PENDIENTE') return false;
+        const diffTime = new Date(cuota.fechaPago).getTime() - hoy.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays >= 0 && diffDays <= 7;
+      });
+
+      if (cuotaProxima) {
+        const diffTime = new Date(cuotaProxima.fechaPago).getTime() - hoy.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const index = cuotasOrdenadas.indexOf(cuotaProxima); // índice en cuotas ordenadas
+        this.mensajeVencimiento = diffDays === 0
+          ? `Hoy vence la ${this.ordinal(index + 1)} cuota`
+          : `En ${diffDays} día${diffDays === 1 ? '' : 's'} vence la ${this.ordinal(index + 1)} cuota`;
+      } else {
+        // Busca la primera vencida
+        const cuotaVencida = cuotasOrdenadas.find((cuota) => {
+          if (cuota.estado !== 'PENDIENTE') return false;
+          return new Date(cuota.fechaPago).getTime() < hoy.getTime();
+        });
+
+        if (cuotaVencida) {
+          const diffTime = hoy.getTime() - new Date(cuotaVencida.fechaPago).getTime();
+          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+          const index = cuotasOrdenadas.indexOf(cuotaVencida);
+          this.mensajeVencimiento = `Venció la ${this.ordinal(index + 1)} cuota hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
+        }
+      }
     });
+  }
+
+  // Método para ordinales en español
+  ordinal(n: number): string {
+    const ordinals = ['1ra', '2da', '3ra', '4ta', '5ta', '6ta', '7ma', '8va', '9na', '10ma', '11va', '12va', '13va', '14va', '15va', '16va', '17va', '18va', '19va', '20va', '21va', '22va', '23va', '24va'];
+    return ordinals[n - 1] || `${n}ta`;
   }
 
   pagarCuota(cuotaId: number) {

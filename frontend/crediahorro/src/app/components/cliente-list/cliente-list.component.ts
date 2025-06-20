@@ -54,7 +54,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
             cliente.estadoPrestamoMasReciente = prestamoMasReciente.estado;
 
             if (prestamoMasReciente.cuotas) {
-              // 🟡 Buscamos la próxima cuota pendiente en los próximos 7 días
+              // Buscamos la próxima cuota pendiente en los próximos 7 días
               const cuotaCercana = prestamoMasReciente.cuotas.find(cuota => {
                 if (cuota.estado !== 'PENDIENTE') return false;
                 const fechaPagoDate = new Date(cuota.fechaPago);
@@ -70,7 +70,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
                   diffDays === 0 ? 'Hoy vence una cuota' :
                   `En ${diffDays} día${diffDays === 1 ? '' : 's'} vence una cuota`;
               } else {
-                // 🟡 Si NO hay cuota en los próximos 7 días, revisamos si hay alguna VENCIDA
+                // Si NO hay cuota en los próximos 7 días, revisamos si hay alguna VENCIDA
                 const cuotaVencida = prestamoMasReciente.cuotas.find(cuota => {
                   if (cuota.estado !== 'PENDIENTE') return false;
                   const fechaPagoDate = new Date(cuota.fechaPago);
