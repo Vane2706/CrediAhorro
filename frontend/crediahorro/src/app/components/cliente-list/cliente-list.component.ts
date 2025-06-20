@@ -39,21 +39,32 @@ export class ClienteListComponent implements OnInit, OnDestroy {
   cargarClientes(): void {
     this.clienteService.getClientes().subscribe(
       data => {
-        const clientes = data.reverse(); // Para mantener tu orden
-        // Procesar cada cliente
+        const clientes = data.reverse();
+        const hoy = new Date().toISOString().slice(0, 10); // formato yyyy-MM-dd
+
         clientes.forEach(cliente => {
+          cliente.cuotaPendienteHoy = false;
+
           if (cliente.prestamos && cliente.prestamos.length > 0) {
-            // Ordenar préstamos por fechaCreacion descendente
             const prestamosOrdenados = [...cliente.prestamos].sort((a, b) => {
               return new Date(b.fechaCreacion!).getTime() - new Date(a.fechaCreacion!).getTime();
             });
 
-            // Prestamo más reciente
             const prestamoMasReciente = prestamosOrdenados[0];
+            cliente.estadoPrestamoMasReciente = prestamoMasReciente.estado;
 
-            cliente['estadoPrestamoMasReciente'] = prestamoMasReciente.estado;
+            // Buscar cuota pendiente con fecha de pago = hoy
+            if (prestamoMasReciente.cuotas) {
+              const cuotaParaHoy = prestamoMasReciente.cuotas.find(cuota =>
+                cuota.fechaPago === hoy && cuota.estado === 'PENDIENTE'
+              );
+              if (cuotaParaHoy) {
+                cliente.cuotaPendienteHoy = true;
+              }
+            }
+
           } else {
-            cliente['estadoPrestamoMasReciente'] = 'SIN_PRESTAMO';
+            cliente.estadoPrestamoMasReciente = 'SIN_PRESTAMO';
           }
         });
 

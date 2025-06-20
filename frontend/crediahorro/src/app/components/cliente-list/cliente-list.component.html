@@ -12,16 +12,23 @@
     <div class="row g-3">
       <div class="col-md-6 col-lg-4" *ngFor="let cliente of mesAnio.value">
         <div class="card cliente-card shadow-sm border-0 h-100 position-relative">
-          <!-- Badge identificador -->
-          <span
-            *ngIf="cliente.estadoPrestamoMasReciente !== 'SIN_PRESTAMO'"
-            class="badge position-absolute top-0 end-0 m-2"
-            [ngClass]="{
-      'bg-success': cliente.estadoPrestamoMasReciente === 'PAGADO',
-      'bg-warning text-dark': cliente.estadoPrestamoMasReciente === 'ACTIVO'
-    }">
-    {{ cliente.estadoPrestamoMasReciente === 'PAGADO' ? 'Préstamo Pagado' : 'Préstamo Activo' }}
-  </span>
+          <!-- Contenedor de badges -->
+          <div class="badge-container position-absolute top-0 start-0 w-100 d-flex justify-content-between p-2">
+    <span
+      *ngIf="cliente.cuotaPendienteHoy"
+      class="badge bg-danger">
+      Hoy vence una cuota
+    </span>
+            <span
+              *ngIf="cliente.estadoPrestamoMasReciente !== 'SIN_PRESTAMO'"
+              class="badge"
+              [ngClass]="{
+        'bg-success': cliente.estadoPrestamoMasReciente === 'PAGADO',
+        'bg-warning text-dark': cliente.estadoPrestamoMasReciente === 'ACTIVO'
+      }">
+      {{ cliente.estadoPrestamoMasReciente === 'PAGADO' ? 'Préstamo Pagado' : 'Préstamo Activo' }}
+    </span>
+          </div>
 
           <div class="card-body d-flex flex-column">
             <div class="d-flex align-items-center mb-2">

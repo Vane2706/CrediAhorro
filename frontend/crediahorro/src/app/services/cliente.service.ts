@@ -3,6 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
+export interface Cuota {
+  id: number;
+  fechaPago: string;
+  montoCuota: number;
+  capital: number;
+  interes: number;
+  estado: string;
+  tipoPago: string;
+  fechaPagada: string;
+}
+
 export interface Prestamo {
   id?: number;
   monto: number;
@@ -11,6 +22,7 @@ export interface Prestamo {
   fechaInicio: string;
   estado?: string;
   fechaCreacion?: string;
+  cuotas?: Cuota[];
 }
 
 export interface Cliente {
@@ -23,6 +35,7 @@ export interface Cliente {
   fechaCreacion?: string;
   prestamos?: Prestamo[];
   estadoPrestamoMasReciente?: string;
+  cuotaPendienteHoy?: boolean;
 }
 
 
