@@ -22,6 +22,7 @@ export interface Cliente {
   correoElectronico: string;
   fechaCreacion?: string;
   prestamos?: Prestamo[];
+  estadoPrestamoMasReciente?: string;
 }
 
 

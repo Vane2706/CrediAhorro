@@ -50,6 +50,7 @@ input.form-control:focus {
 
 .input-icon {
   position: absolute;
+  pointer-events: none;
   top: 38px;
   left: 15px;
   color: #6c757d;

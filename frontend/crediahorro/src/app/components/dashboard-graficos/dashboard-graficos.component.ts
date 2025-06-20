@@ -35,7 +35,7 @@ export class DashboardGraficosComponent implements OnInit {
     name: 'custom',
     selectable: true,
     group: 'Ordinal',
-    domain: ['#7aa3e5', '#a8385d', '#aae3f5', '#A58ABF', '#E3B075', '#FFF293', '#C9DC92', '#E07C3E']
+    domain: ['#7aa3e5', '#a8385d', '#aae3f5', '#A58ABF', '#E3B075', '#FFF293', '#C9DC92', '#E07C3E', '#FFF8DC', '#8B0000', '#FFFAF0', '#E0FFFF']
   };
 
   selectedData: any = null;

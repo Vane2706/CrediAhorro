@@ -40,6 +40,23 @@ export class ClienteListComponent implements OnInit, OnDestroy {
     this.clienteService.getClientes().subscribe(
       data => {
         const clientes = data.reverse(); // Para mantener tu orden
+        // Procesar cada cliente
+        clientes.forEach(cliente => {
+          if (cliente.prestamos && cliente.prestamos.length > 0) {
+            // Ordenar préstamos por fechaCreacion descendente
+            const prestamosOrdenados = [...cliente.prestamos].sort((a, b) => {
+              return new Date(b.fechaCreacion!).getTime() - new Date(a.fechaCreacion!).getTime();
+            });
+
+            // Prestamo más reciente
+            const prestamoMasReciente = prestamosOrdenados[0];
+
+            cliente['estadoPrestamoMasReciente'] = prestamoMasReciente.estado;
+          } else {
+            cliente['estadoPrestamoMasReciente'] = 'SIN_PRESTAMO';
+          }
+        });
+
         this.clientes = clientes;
         this.clientesAgrupadosPorMes = this.agruparClientesPorMes(clientes);
       },
