@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import upeu.edu.pe.report_grafico.services.GraficoService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -18,10 +19,8 @@ public class GraficoController {
         this.graficoService = graficoService;
     }
 
-    @GetMapping(path = "/prestamos")
-    public Map<String, Map<String, Double>> getGraficoPrestamos(
-            @RequestParam String tipo // semanal, mensual, anual
-    ) {
-        return graficoService.resumenPorPeriodo(tipo);
+    @GetMapping(path = "/prestamos-por-anio")
+    public Map<String, List<Map<String, Object>>> getPrestamosPorAnioConMeses() {
+        return graficoService.resumenPorAnioConMeses();
     }
 }

@@ -7,57 +7,19 @@
 
     <!-- Reporte Semanal -->
     <div class="mb-5">
-      <h5 class="text-secondary"><i class="bi bi-calendar-week"></i> Reporte Semanal</h5>
+      <h5 class="text-secondary mt-4"><i class="bi bi-calendar-range"></i> Reporte Anual con Meses</h5>
       <ngx-charts-bar-vertical
         [view]="view"
         [scheme]="colorScheme"
-        [results]="semanalData"
+        [results]="anualConMesesData"
         [gradient]="gradient"
         [xAxis]="showXAxis"
         [yAxis]="showYAxis"
         [legend]="showLegend"
         [showXAxisLabel]="showXAxisLabel"
-        [xAxisLabel]="xAxisLabel"
+        [xAxisLabel]="'Meses'"
         [showYAxisLabel]="showYAxisLabel"
-        [yAxisLabel]="yAxisLabel"
-        (select)="onBarSelect($event)">
-      </ngx-charts-bar-vertical>
-    </div>
-
-    <!-- Reporte Mensual -->
-    <div class="mb-5">
-      <h5 class="text-secondary"><i class="bi bi-calendar-month"></i> Reporte Mensual</h5>
-      <ngx-charts-bar-vertical
-        [view]="view"
-        [scheme]="colorScheme"
-        [results]="mensualData"
-        [gradient]="gradient"
-        [xAxis]="showXAxis"
-        [yAxis]="showYAxis"
-        [legend]="showLegend"
-        [showXAxisLabel]="showXAxisLabel"
-        [xAxisLabel]="xAxisLabel"
-        [showYAxisLabel]="showYAxisLabel"
-        [yAxisLabel]="yAxisLabel"
-        (select)="onBarSelect($event)">
-      </ngx-charts-bar-vertical>
-    </div>
-
-    <!-- Reporte Anual -->
-    <div>
-      <h5 class="text-secondary"><i class="bi bi-calendar-range"></i> Reporte Anual</h5>
-      <ngx-charts-bar-vertical
-        [view]="view"
-        [scheme]="colorScheme"
-        [results]="anualData"
-        [gradient]="gradient"
-        [xAxis]="showXAxis"
-        [yAxis]="showYAxis"
-        [legend]="showLegend"
-        [showXAxisLabel]="showXAxisLabel"
-        [xAxisLabel]="xAxisLabel"
-        [showYAxisLabel]="showYAxisLabel"
-        [yAxisLabel]="yAxisLabel"
+        [yAxisLabel]="'Monto Prestado'"
         (select)="onBarSelect($event)">
       </ngx-charts-bar-vertical>
     </div>
@@ -66,9 +28,12 @@
   <!-- Modal Elegante -->
   <div *ngIf="showModal" class="modal-overlay" (click)="showModal = false">
     <div class="modal-content shadow" (click)="$event.stopPropagation()">
-      <h5 class="mb-3"><i class="bi bi-info-circle-fill text-primary"></i> Detalles del Periodo</h5>
-      <p><strong>Periodo:</strong> {{ selectedData?.name }}</p>
-      <p><strong>Cantidad:</strong> S/ {{ selectedData?.value }}</p>
+      <h5 class="mb-3"><i class="bi bi-info-circle-fill text-primary"></i> Detalles del Mes</h5>
+      <p><strong>Año:</strong> {{ selectedData?.extra?.anio || 'N/A' }}</p>
+      <p><strong>Mes:</strong> {{ selectedData?.name || 'N/A' }}</p>
+      <p><strong>Monto Prestado:</strong> S/ {{ selectedData?.extra?.montoPrestado?.toFixed(2) || '0.00' }}</p>
+      <p><strong>Monto Pagado:</strong> S/ {{ selectedData?.extra?.montoPagado?.toFixed(2) || '0.00' }}</p>
+      <p><strong>Ganancia:</strong> S/ {{ selectedData?.extra?.ganancia?.toFixed(2) || '0.00' }}</p>
       <button class="btn btn-outline-primary w-100 mt-3" (click)="showModal = false">
         <i class="bi bi-x-circle"></i> Cerrar
       </button>

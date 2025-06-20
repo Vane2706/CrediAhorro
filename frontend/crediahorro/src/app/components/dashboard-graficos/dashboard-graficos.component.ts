@@ -14,11 +14,9 @@ import { ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class DashboardGraficosComponent implements OnInit {
-  semanalData: any[] = [];
-  mensualData: any[] = [];
-  anualData: any[] = [];
+  anualConMesesData: any[] = [];
 
-  view: [number, number] = [700, 300];
+  view: [number, number] = [1200, 300];
 
   // opciones
   showXAxis = true;
@@ -42,35 +40,31 @@ export class DashboardGraficosComponent implements OnInit {
   constructor(private reportService: ReportGraficoService) {}
 
   ngOnInit(): void {
-    this.reportService.getSemanal().subscribe((data: any) => {
-      console.log('Datos Semanal:', data);
-      this.semanalData = this.mapToChartData(data);
-      console.log('Datos transformados Semanal:', this.semanalData);
-    });
-
-    this.reportService.getMensual().subscribe((data: any) => {
-      console.log('Datos Mensual:', data);
-      this.mensualData = this.mapToChartData(data);
-      console.log('Datos transformados Mensual:', this.mensualData);
-    });
-
-    this.reportService.getAnual().subscribe((data: any) => {
-      console.log('Datos Anual:', data);
-      this.anualData = this.mapToChartData(data);
-      console.log('Datos transformados Anual:', this.anualData);
+    this.reportService.getPorAnioConMeses().subscribe(data => {
+      this.anualConMesesData = this.mapAnualConMesesToChart(data);
+      console.log('Anual con meses:', this.anualConMesesData);
     });
   }
 
+  mapAnualConMesesToChart(data: any): any[] {
+    const [anio, mesesRaw] = Object.entries(data)[0];
 
-  mapToChartData(data: any): any[] {
-    return Object.entries(data).map(([key, value]: [string, any]) => ({
-      name: key,
-      value: value['ACTIVO'] || 0
+    const meses = mesesRaw as Array<any>;  // Aquí aclaras el tipo
+
+    return meses.map((m: any) => ({
+      name: m.mes,
+      value: m.montoPrestado,
+      extra: {
+        montoPrestado: m.montoPrestado,
+        montoPagado: m.montoPagado,
+        ganancia: m.ganancia,
+        anio: anio
+      }
     }));
   }
 
   onBarSelect(event: any): void {
     this.selectedData = event;
     this.showModal = true;
-    }
+  }
 }
