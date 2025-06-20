@@ -54,37 +54,41 @@ export class ClienteListComponent implements OnInit, OnDestroy {
             cliente.estadoPrestamoMasReciente = prestamoMasReciente.estado;
 
             if (prestamoMasReciente.cuotas) {
-              // Buscamos la próxima cuota pendiente en los próximos 7 días
-              const cuotaCercana = prestamoMasReciente.cuotas.find(cuota => {
+              // Ordenar cuotas por fechaPago ascendente
+              const cuotasOrdenadas = [...prestamoMasReciente.cuotas].sort(
+                (a, b) => new Date(a.fechaPago).getTime() - new Date(b.fechaPago).getTime()
+              );
+
+              // Cuota próxima a vencer dentro de 7 días
+              const cuotaProxima = cuotasOrdenadas.find((cuota) => {
                 if (cuota.estado !== 'PENDIENTE') return false;
-                const fechaPagoDate = new Date(cuota.fechaPago);
-                const diffTime = fechaPagoDate.getTime() - hoyDate.getTime();
+                const diffTime = new Date(cuota.fechaPago).getTime() - hoyDate.getTime();
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 return diffDays >= 0 && diffDays <= 7;
               });
 
-              if (cuotaCercana) {
-                const fechaPagoDate = new Date(cuotaCercana.fechaPago);
-                const diffDays = Math.ceil((fechaPagoDate.getTime() - hoyDate.getTime()) / (1000 * 60 * 60 * 24));
-                cliente.cuotaPendienteTexto =
-                  diffDays === 0 ? 'Hoy vence una cuota' :
-                  `En ${diffDays} día${diffDays === 1 ? '' : 's'} vence una cuota`;
+              if (cuotaProxima) {
+                const diffTime = new Date(cuotaProxima.fechaPago).getTime() - hoyDate.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const index = cuotasOrdenadas.indexOf(cuotaProxima); // índice ordinal
+                cliente.cuotaPendienteTexto = diffDays === 0
+                  ? `Hoy vence la ${this.ordinal(index + 1)} cuota`
+                  : `En ${diffDays} día${diffDays === 1 ? '' : 's'} vence la ${this.ordinal(index + 1)} cuota`;
               } else {
-                // Si NO hay cuota en los próximos 7 días, revisamos si hay alguna VENCIDA
-                const cuotaVencida = prestamoMasReciente.cuotas.find(cuota => {
+                // Cuota vencida
+                const cuotaVencida = cuotasOrdenadas.find((cuota) => {
                   if (cuota.estado !== 'PENDIENTE') return false;
-                  const fechaPagoDate = new Date(cuota.fechaPago);
-                  return fechaPagoDate.getTime() < hoyDate.getTime();
+                  return new Date(cuota.fechaPago).getTime() < hoyDate.getTime();
                 });
 
                 if (cuotaVencida) {
-                  const fechaPagoDate = new Date(cuotaVencida.fechaPago);
-                  const diffDays = Math.floor((hoyDate.getTime() - fechaPagoDate.getTime()) / (1000 * 60 * 60 * 24));
-                  cliente.cuotaPendienteTexto = `Venció una cuota hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
+                  const diffTime = hoyDate.getTime() - new Date(cuotaVencida.fechaPago).getTime();
+                  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                  const index = cuotasOrdenadas.indexOf(cuotaVencida); // índice ordinal
+                  cliente.cuotaPendienteTexto = `Venció la ${this.ordinal(index + 1)} cuota hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
                 }
               }
             }
-
           } else {
             cliente.estadoPrestamoMasReciente = 'SIN_PRESTAMO';
           }
@@ -96,6 +100,12 @@ export class ClienteListComponent implements OnInit, OnDestroy {
       error => console.error(error)
     );
   }
+
+  // Método para ordinales en español
+    ordinal(n: number): string {
+      const ordinals = ['1ra', '2da', '3ra', '4ta', '5ta', '6ta', '7ma', '8va', '9na', '10ma', '11va', '12va', '13va', '14va', '15va', '16va', '17va', '18va', '19va', '20va', '21va', '22va', '23va', '24va'];
+      return ordinals[n - 1] || `${n}ta`;
+    }
 
   agruparClientesPorMes(clientes: Cliente[]): { [mesAnio: string]: Cliente[] } {
     const agrupados: { [mesAnio: string]: Cliente[] } = {};
