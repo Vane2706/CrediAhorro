@@ -3,18 +3,21 @@ import { ReportGraficoService } from '../../services/report-grafico.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { FormsModule } from '@angular/forms';
 import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard-graficos',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgxChartsModule],
+  imports: [CommonModule, RouterModule, NgxChartsModule, FormsModule],
   templateUrl: './dashboard-graficos.component.html',
   styleUrls: ['./dashboard-graficos.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class DashboardGraficosComponent implements OnInit {
   anualConMesesData: any[] = [];
+  availableYears: string[] = [];
+  selectedYear: string = '';
 
   view: [number, number] = [1200, 300];
 
@@ -41,16 +44,23 @@ export class DashboardGraficosComponent implements OnInit {
   constructor(private reportService: ReportGraficoService) {}
 
   ngOnInit(): void {
-    this.adjustChartView();
-    this.reportService.getPorAnioConMeses().subscribe(data => {
-      this.anualConMesesData = this.mapAnualConMesesToChart(data);
-      console.log('Anual con meses:', this.anualConMesesData);
-    });
-  }
+      this.adjustChartView();
+      this.reportService.getPorAnioConMeses().subscribe(data => {
+        this.anualConMesesData = this.mapAnualConMesesToChart(data);
+
+        // Extraer los años y ordenarlos decrecientemente
+        this.availableYears = this.anualConMesesData
+          .map(item => item.anio)
+          .sort((a, b) => +b - +a);
+
+        // Seleccionar el año más reciente por defecto
+        this.selectedYear = this.availableYears[0];
+      });
+    }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    console.log(event.target.innerWidth);  // O lo que necesites
+    console.log(event.target.innerWidth);
     this.adjustChartView();
   }
 
@@ -74,11 +84,10 @@ export class DashboardGraficosComponent implements OnInit {
         anio: anio,
         chartData: meses.map((m: any) => ({
           name: m.mes,
-          value: m.montoPrestado,
+          value: m.montoPagado,  // Lo que la barra muestra: monto pagado
           extra: {
             montoPrestado: m.montoPrestado,
             montoPagado: m.montoPagado,
-            ganancia: m.ganancia,
             anio: anio
           }
         }))
@@ -89,5 +98,9 @@ export class DashboardGraficosComponent implements OnInit {
   onBarSelect(event: any): void {
     this.selectedData = event;
     this.showModal = true;
+  }
+
+  changeYear(year: string): void {
+    this.selectedYear = year;
   }
 }

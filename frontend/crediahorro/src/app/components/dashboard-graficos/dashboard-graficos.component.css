@@ -48,3 +48,29 @@ ngx-charts-bar-vertical {
     font-size: 1.2rem;
   }
 }
+
+.prestamo-card {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.prestamo-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.prestamo-card .text-primary {
+  font-size: 0.95rem;
+}
+
+.prestamo-card strong {
+  color: #212529;
+}
+
+@media (max-width: 576px) {
+  .prestamo-card {
+    font-size: 0.85rem;
+    padding: 1rem;
+  }
+}
