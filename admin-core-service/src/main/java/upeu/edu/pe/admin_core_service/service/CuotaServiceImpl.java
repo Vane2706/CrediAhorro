@@ -83,16 +83,16 @@ public class CuotaServiceImpl implements CuotaService {
         if (tipoPago.equalsIgnoreCase("Capital")) {
             pasarAProximaCuota(cuotaId, "interes", interes);
             nuevoMonto = capital;
-            cuota.setTipoPago("Pagó Capital");
+            cuota.setTipoPago("Capital");
 
         } else if (tipoPago.equalsIgnoreCase("Interes")) {
             pasarAProximaCuota(cuotaId, "capital", capital);
             nuevoMonto = interes;
-            cuota.setTipoPago("Pagó Interés");
+            cuota.setTipoPago("Interés");
 
         } else if (tipoPago.equalsIgnoreCase("Completo")) {
             nuevoMonto = capital + interes;
-            cuota.setTipoPago("Pagó Completo");
+            cuota.setTipoPago("Completo");
 
         } else {
             throw new IllegalArgumentException("Tipo de pago inválido");

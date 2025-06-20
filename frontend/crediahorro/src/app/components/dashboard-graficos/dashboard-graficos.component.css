@@ -33,11 +33,18 @@
   }
 }
 
-h3, h5 {
-  font-weight: 600;
-}
-
 ngx-charts-bar-vertical {
   display: block;
   width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 576px) {
+  ngx-charts-bar-vertical {
+    height: auto;
+  }
+
+  h3, h5 {
+    font-size: 1.2rem;
+  }
 }

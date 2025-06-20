@@ -1,21 +1,19 @@
 <main class="container mt-4">
-  <div class="card shadow border-0 rounded-4 p-4">
+  <div>
     <div class="mb-4 d-flex align-items-center gap-2 text-primary">
       <i class="bi bi-bar-chart-fill fs-3"></i>
       <h3 class="mb-0">Panel de Reportes Gráficos</h3>
     </div>
 
-    <!-- Reporte Semanal -->
-    <div class="mb-5">
-      <h5 class="text-secondary mt-4"><i class="bi bi-calendar-range"></i> Reporte Anual con Meses</h5>
+    <div *ngFor="let item of anualConMesesData" class="mb-5">
+      <h5 class="text-secondary text-center mt-4"><i class="bi bi-calendar-range"></i> Año {{ item.anio }}</h5>
       <ngx-charts-bar-vertical
         [view]="view"
         [scheme]="colorScheme"
-        [results]="anualConMesesData"
+        [results]="item.chartData"
         [gradient]="gradient"
         [xAxis]="showXAxis"
         [yAxis]="showYAxis"
-        [legend]="showLegend"
         [showXAxisLabel]="showXAxisLabel"
         [xAxisLabel]="'Meses'"
         [showYAxisLabel]="showYAxisLabel"
@@ -32,8 +30,8 @@
       <p><strong>Año:</strong> {{ selectedData?.extra?.anio || 'N/A' }}</p>
       <p><strong>Mes:</strong> {{ selectedData?.name || 'N/A' }}</p>
       <p><strong>Monto Prestado:</strong> S/ {{ selectedData?.extra?.montoPrestado?.toFixed(2) || '0.00' }}</p>
-      <p><strong>Monto Pagado:</strong> S/ {{ selectedData?.extra?.montoPagado?.toFixed(2) || '0.00' }}</p>
-      <p><strong>Ganancia:</strong> S/ {{ selectedData?.extra?.ganancia?.toFixed(2) || '0.00' }}</p>
+      <!--<p><strong>Monto Pagado:</strong> S/ {{ selectedData?.extra?.montoPagado?.toFixed(2) || '0.00' }}</p>
+      <p><strong>Ganancia:</strong> S/ {{ selectedData?.extra?.ganancia?.toFixed(2) || '0.00' }}</p>-->
       <button class="btn btn-outline-primary w-100 mt-3" (click)="showModal = false">
         <i class="bi bi-x-circle"></i> Cerrar
       </button>

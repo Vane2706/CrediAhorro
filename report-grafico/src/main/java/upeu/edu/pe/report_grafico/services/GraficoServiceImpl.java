@@ -25,30 +25,28 @@ public class GraficoServiceImpl implements GraficoService {
     public Map<String, List<Map<String, Object>>> resumenPorAnioConMeses() {
         List<Prestamo> prestamos = prestamoRepository.obtenerTodosLosPrestamos();
 
-        // Determinar el año más reciente o relevante (puedes ajustarlo si quieres soportar múltiples años)
-        int anio = prestamos.stream()
+        Map<String, List<Map<String, Object>>> resultado = new TreeMap<>(); // TreeMap para que se ordene por año
+
+        // Inicializar los 12 meses para cada año
+        Set<Integer> anios = prestamos.stream()
                 .map(p -> p.getFechaCreacion().getYear())
-                .findFirst()
-                .orElse(LocalDate.now().getYear());
+                .collect(Collectors.toSet());
 
-        Map<String, List<Map<String, Object>>> resultado = new TreeMap<>();
-
-        List<Map<String, Object>> meses = new ArrayList<>();
-        for (Month mes : Month.values()) {
-            Map<String, Object> mesData = new HashMap<>();
-            mesData.put("mes", mes.getDisplayName(TextStyle.FULL, new Locale("es")));
-            mesData.put("montoPrestado", 0.0);
-            mesData.put("montoPagado", 0.0);
-            mesData.put("ganancia", 0.0);
-            meses.add(mesData);
+        for (Integer anio : anios) {
+            List<Map<String, Object>> meses = new ArrayList<>();
+            for (Month mes : Month.values()) {
+                Map<String, Object> mesData = new HashMap<>();
+                mesData.put("mes", mes.getDisplayName(TextStyle.FULL, new Locale("es")));
+                mesData.put("montoPrestado", 0.0);
+                mesData.put("montoPagado", 0.0);
+                mesData.put("ganancia", 0.0);
+                meses.add(mesData);
+            }
+            resultado.put(String.valueOf(anio), meses);
         }
-        resultado.put(String.valueOf(anio), meses);
 
         for (Prestamo prestamo : prestamos) {
-            if (prestamo.getFechaCreacion().getYear() != anio) {
-                continue; // Solo el año que queremos graficar
-            }
-
+            String anio = String.valueOf(prestamo.getFechaCreacion().getYear());
             String mesNombre = prestamo.getFechaCreacion().getMonth().getDisplayName(TextStyle.FULL, new Locale("es"));
 
             double montoPrestado = prestamo.getMonto();
@@ -57,10 +55,12 @@ public class GraficoServiceImpl implements GraficoService {
                     .mapToDouble(Cuota::getMontoCuota)
                     .sum();
 
+            List<Map<String, Object>> meses = resultado.get(anio);
+
             Map<String, Object> mesData = meses.stream()
                     .filter(m -> m.get("mes").equals(mesNombre))
                     .findFirst()
-                    .orElseThrow(); // Nunca falla porque ya lo inicializamos
+                    .orElseThrow();
 
             mesData.put("montoPrestado", ((Number) mesData.get("montoPrestado")).doubleValue() + montoPrestado);
             mesData.put("montoPagado", ((Number) mesData.get("montoPagado")).doubleValue() + montoPagado);
