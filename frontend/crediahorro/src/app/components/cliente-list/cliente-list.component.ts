@@ -196,7 +196,9 @@ export class ClienteListComponent implements OnInit, OnDestroy {
     }
 
     if (!found) {
-      alert("No se encontró ningún cliente con ese nombre o DNI.");
+      this.notificationService.show('error', 'No se encontró ningún cliente con ese nombre.');
+    } else {
+    this.notificationService.show('success', 'Se encontró cliente correctamente.');
     }
   }
 
