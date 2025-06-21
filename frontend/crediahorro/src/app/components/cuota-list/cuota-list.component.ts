@@ -65,7 +65,7 @@ export class CuotaListComponent implements OnInit {
         const index = cuotasOrdenadas.indexOf(cuotaProxima); // índice en cuotas ordenadas
         this.mensajeVencimiento = diffDays === 0
           ? `Hoy vence la ${this.ordinal(index + 1)} cuota`
-          : `En ${diffDays} día${diffDays === 1 ? '' : 's'} vence la ${this.ordinal(index + 1)} cuota`;
+          : `Falta ${diffDays} día${diffDays === 1 ? '' : 's'} para vencerse la ${this.ordinal(index + 1)} cuota`;
       } else {
         // Busca la primera vencida
         const cuotaVencida = cuotasOrdenadas.find((cuota) => {

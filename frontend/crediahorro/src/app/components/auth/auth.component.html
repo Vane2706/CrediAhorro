@@ -38,15 +38,16 @@
       <div class="mb-3 position-relative">
         <label class="form-label">Contraseña</label>
         <div class="input-group">
-          <!-- Ícono dentro del input-group para que no se pierda -->
-          <span class="input-group-text bg-transparent border-end-0">
+    <span class="input-group-text bg-transparent border-end-0">
       <i class="bi bi-lock-fill text-secondary"></i>
     </span>
           <input
             [type]="isLoginMode ? (showPasswordLogin ? 'text' : 'password') : (showPasswordRegister ? 'text' : 'password')"
             class="form-control border-start-0"
+            [class.is-invalid]="passwordTouched && !isLoginMode && !passwordValid"
             [ngModel]="isLoginMode ? loginData.password : registerData.password"
-            (ngModelChange)="isLoginMode ? loginData.password = $event : registerData.password = $event"
+            (ngModelChange)="isLoginMode ? loginData.password = $event : registerData.password = $event; validatePassword()"
+            (focus)="passwordTouched = true"
             [name]="isLoginMode ? 'loginPassword' : 'registerPassword'"
             required
           />
@@ -54,7 +55,13 @@
             <i class="bi" [ngClass]="isLoginMode ? (showPasswordLogin ? 'bi-eye-slash' : 'bi-eye') : (showPasswordRegister ? 'bi-eye-slash' : 'bi-eye')"></i>
           </button>
         </div>
+
+        <!-- Reglas -->
+        <small *ngIf="passwordTouched && !isLoginMode" class="text-muted d-block mt-1">
+          La contraseña debe tener al menos 8 caracteres, incluir letras y números.
+        </small>
       </div>
+
 
       <!-- Error -->
       <div class="text-danger text-center mb-3" *ngIf="errorMessage">

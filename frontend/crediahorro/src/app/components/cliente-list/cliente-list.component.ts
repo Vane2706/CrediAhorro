@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ClienteService, Cliente } from '../../services/cliente.service';
 import { BusquedaService } from '../../services/busqueda.service';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../services/notification.service';
 import { ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -21,7 +22,8 @@ export class ClienteListComponent implements OnInit, OnDestroy {
 
   constructor(
     private clienteService: ClienteService,
-    private busquedaService: BusquedaService
+    private busquedaService: BusquedaService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -73,7 +75,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
                 const index = cuotasOrdenadas.indexOf(cuotaProxima); // índice ordinal
                 cliente.cuotaPendienteTexto = diffDays === 0
                   ? `Hoy vence la ${this.ordinal(index + 1)} cuota`
-                  : `En ${diffDays} día${diffDays === 1 ? '' : 's'} vence la ${this.ordinal(index + 1)} cuota`;
+                  : `Falta ${diffDays} día${diffDays === 1 ? '' : 's'} para vencerse la ${this.ordinal(index + 1)} cuota`;
               } else {
                 // Cuota vencida
                 const cuotaVencida = cuotasOrdenadas.find((cuota) => {
@@ -153,8 +155,13 @@ export class ClienteListComponent implements OnInit, OnDestroy {
 
   eliminarCliente(id: number): void {
     this.clienteService.eliminarCliente(id).subscribe(
-      () => this.cargarClientes(),
-      error => console.error(error)
+      () => {
+        this.notificationService.show('success', 'Cliente eliminado correctamente.');
+        this.cargarClientes();
+      },
+      error => {
+        this.notificationService.show('error', 'Error eliminando cliente.');
+      }
     );
   }
 

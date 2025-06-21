@@ -4,11 +4,13 @@ import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BusquedaService } from './services/busqueda.service';
 import { AuthService } from './services/auth.service';
+import { NotificationService } from '../app/services/notification.service';
+import { AlertComponent } from './components/alert/alert.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule ],
+  imports: [RouterOutlet, RouterModule, CommonModule, AlertComponent ],
   template: `
     <div class="d-flex flex-column min-vh-100">
       <!-- Navbar -->
@@ -72,6 +74,7 @@ import { AuthService } from './services/auth.service';
 
       <!-- Content -->
       <main class="flex-fill container my-4">
+        <app-alert></app-alert>
         <router-outlet></router-outlet>
       </main>
 
@@ -196,7 +199,8 @@ export class AppComponent implements OnInit {
   constructor(
     private busquedaService: BusquedaService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {
     this.router.events.subscribe(() => {
       this.currentUrl = this.router.url;
@@ -231,6 +235,7 @@ export class AppComponent implements OnInit {
   cerrarSesion() {
     this.authService.logout();
     this.router.navigate(['/auth']);
+    this.notificationService.show('success', 'Sesión cerrada con éxito.');
   }
 }
 
