@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CuotaService, Cuota } from '../../services/cuota.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
 import { ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -27,7 +28,8 @@ export class CuotaListComponent implements OnInit {
   constructor(
     private cuotaService: CuotaService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -41,40 +43,54 @@ export class CuotaListComponent implements OnInit {
       this.cuotasPendientes = data.cuotasPendientes;
 
       this.totalAPagar = this.cuotas.reduce((sum, c) => sum + c.montoCuota, 0);
-      this.totalPagado = this.cuotas.filter(c => c.estado === 'PAGADA')
+      this.totalPagado = this.cuotas
+        .filter(c => c.estado === 'PAGADA')
         .reduce((sum, c) => sum + c.montoCuota, 0);
-      this.faltaPagar = this.cuotas.filter(c => c.estado === 'PENDIENTE')
+      this.faltaPagar = this.cuotas
+        .filter(c => c.estado === 'PENDIENTE')
         .reduce((sum, c) => sum + c.montoCuota, 0);
+
       this.mensajeVencimiento = '';
       const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0); // Medianoche local
 
       // Ordenamos las cuotas por fechaPago
-      const cuotasOrdenadas = [...this.cuotas].sort((a, b) => new Date(a.fechaPago).getTime() - new Date(b.fechaPago).getTime());
+      const cuotasOrdenadas = [...this.cuotas].sort(
+        (a, b) => new Date(a.fechaPago).getTime() - new Date(b.fechaPago).getTime()
+      );
 
-      // Busca la primera pendiente en los próximos 7 días
+      // Cuota próxima a vencer
       const cuotaProxima = cuotasOrdenadas.find((cuota) => {
         if (cuota.estado !== 'PENDIENTE') return false;
-        const diffTime = new Date(cuota.fechaPago).getTime() - hoy.getTime();
+        const fechaPagoDate = new Date(cuota.fechaPago + 'T00:00:00');
+        fechaPagoDate.setHours(0, 0, 0, 0);
+        const diffTime = fechaPagoDate.getTime() - hoy.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         return diffDays >= 0 && diffDays <= 7;
       });
 
       if (cuotaProxima) {
-        const diffTime = new Date(cuotaProxima.fechaPago).getTime() - hoy.getTime();
+        const fechaPagoDate = new Date(cuotaProxima.fechaPago + 'T00:00:00');
+        fechaPagoDate.setHours(0, 0, 0, 0);
+        const diffTime = fechaPagoDate.getTime() - hoy.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        const index = cuotasOrdenadas.indexOf(cuotaProxima); // índice en cuotas ordenadas
+        const index = cuotasOrdenadas.indexOf(cuotaProxima);
         this.mensajeVencimiento = diffDays === 0
           ? `Hoy vence la ${this.ordinal(index + 1)} cuota`
           : `Falta ${diffDays} día${diffDays === 1 ? '' : 's'} para vencerse la ${this.ordinal(index + 1)} cuota`;
       } else {
-        // Busca la primera vencida
+        // Cuota vencida
         const cuotaVencida = cuotasOrdenadas.find((cuota) => {
           if (cuota.estado !== 'PENDIENTE') return false;
-          return new Date(cuota.fechaPago).getTime() < hoy.getTime();
+          const fechaPagoDate = new Date(cuota.fechaPago + 'T00:00:00');
+          fechaPagoDate.setHours(0, 0, 0, 0);
+          return fechaPagoDate.getTime() < hoy.getTime();
         });
 
         if (cuotaVencida) {
-          const diffTime = hoy.getTime() - new Date(cuotaVencida.fechaPago).getTime();
+          const fechaPagoDate = new Date(cuotaVencida.fechaPago + 'T00:00:00');
+          fechaPagoDate.setHours(0, 0, 0, 0);
+          const diffTime = hoy.getTime() - fechaPagoDate.getTime();
           const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
           const index = cuotasOrdenadas.indexOf(cuotaVencida);
           this.mensajeVencimiento = `Venció la ${this.ordinal(index + 1)} cuota hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
@@ -116,9 +132,15 @@ export class CuotaListComponent implements OnInit {
   pagarAvanzado(tipo: string): void {
     if (!this.cuotaSeleccionada) return;
 
-    this.cuotaService.pagarCuotaAvanzado(this.cuotaSeleccionada.id, tipo).subscribe(() => {
-      this.loadCuotas();
-      this.cerrarModal();
+    this.cuotaService.pagarCuotaAvanzado(this.cuotaSeleccionada.id, tipo).subscribe({
+      next: () => {
+        this.notificationService.show('success', 'Cuota pagada exitosamente.');
+        this.loadCuotas();
+        this.cerrarModal();
+      },
+      error: () => {
+        this.notificationService.show('error', 'Hubo un error al pagar la cuota.');
+      }
     });
   }
 }

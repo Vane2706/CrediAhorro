@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrestamoService, Prestamo } from '../../services/prestamo.service';
+import { NotificationService } from '../../services/notification.service';
 import { ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -25,7 +26,8 @@ export class NuevoPrestamoComponent {
   constructor(
     private prestamoService: PrestamoService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -34,8 +36,13 @@ export class NuevoPrestamoComponent {
 
   guardarPrestamo() {
     this.prestamoService.crearPrestamo(this.clienteId, this.prestamo).subscribe({
-      next: () => this.router.navigate(['/clientes/prestamos', this.clienteId]),
-      error: (err: any) => console.error(err)
+      next: () => {
+        this.notificationService.show('success', 'Préstamo creado correctamente.');
+        this.router.navigate(['/clientes/prestamos', this.clienteId]);
+      },
+      error: () => {
+        this.notificationService.show('error', 'Hubo un error al crear el préstamo.');
+      }
     });
   }
 

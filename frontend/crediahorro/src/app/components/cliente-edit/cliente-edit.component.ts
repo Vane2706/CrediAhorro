@@ -4,6 +4,7 @@ import { Cliente, Prestamo, ClienteService } from '../../services/cliente.servic
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
 import { ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -23,7 +24,8 @@ export class ClienteEditComponent implements OnInit {
     private route: ActivatedRoute,
     private clienteService: ClienteService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -78,8 +80,14 @@ export class ClienteEditComponent implements OnInit {
       ...this.clienteData,
       ...this.clienteForm.value
     };
-    this.clienteService.updateCliente(this.clienteId, updatedCliente).subscribe(() => {
-      this.router.navigate(['/clientes']);
+    this.clienteService.updateCliente(this.clienteId, updatedCliente).subscribe({
+      next: () => {
+        this.notificationService.show('success', 'Cliente editado correctamente.');
+        this.router.navigate(['/clientes']);
+      },
+      error: () => {
+        this.notificationService.show('error', 'Hubo un error al editar el cliente.');
+      }
     });
   }
 }

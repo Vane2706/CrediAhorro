@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { ClienteService, Cliente, Prestamo } from '../../services/cliente.service';
+import { NotificationService } from '../../services/notification.service';
 import { ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -24,7 +25,7 @@ export class ClienteFormComponent {
     prestamos: []  // importante inicializar
   };
 
-  constructor(private clienteService: ClienteService, private router: Router) { }
+  constructor(private clienteService: ClienteService, private router: Router, private notificationService: NotificationService) { }
 
   agregarPrestamo(): void {
     this.cliente.prestamos!.push({
@@ -40,9 +41,14 @@ export class ClienteFormComponent {
   }
 
   guardarCliente(): void {
-    this.clienteService.crearCliente(this.cliente).subscribe(
-      () => this.router.navigate(['/clientes']),
-      error => console.error(error)
-    );
+    this.clienteService.crearCliente(this.cliente).subscribe({
+      next: () => {
+        this.notificationService.show('success', 'Cliente creado correctamente.');
+        this.router.navigate(['/clientes']);
+      },
+      error: () => {
+        this.notificationService.show('error', 'Hubo un error al crear el cliente.');
+      }
+    });
   }
 }

@@ -42,37 +42,43 @@ export class ClienteListComponent implements OnInit, OnDestroy {
     this.clienteService.getClientes().subscribe(
       data => {
         const clientes = data.reverse();
+
         const hoyDate = new Date();
+        hoyDate.setHours(0, 0, 0, 0); // Medianoche local
 
         clientes.forEach(cliente => {
           cliente.cuotaPendienteTexto = '';
 
           if (cliente.prestamos && cliente.prestamos.length > 0) {
-            const prestamosOrdenados = [...cliente.prestamos].sort((a, b) => {
-              return new Date(b.fechaCreacion!).getTime() - new Date(a.fechaCreacion!).getTime();
-            });
+            const prestamosOrdenados = [...cliente.prestamos].sort(
+              (a, b) => new Date(b.fechaCreacion!).getTime() - new Date(a.fechaCreacion!).getTime()
+            );
 
             const prestamoMasReciente = prestamosOrdenados[0];
             cliente.estadoPrestamoMasReciente = prestamoMasReciente.estado;
 
             if (prestamoMasReciente.cuotas) {
-              // Ordenar cuotas por fechaPago ascendente
               const cuotasOrdenadas = [...prestamoMasReciente.cuotas].sort(
                 (a, b) => new Date(a.fechaPago).getTime() - new Date(b.fechaPago).getTime()
               );
 
-              // Cuota próxima a vencer dentro de 7 días
+              // Cuota próxima
               const cuotaProxima = cuotasOrdenadas.find((cuota) => {
                 if (cuota.estado !== 'PENDIENTE') return false;
-                const diffTime = new Date(cuota.fechaPago).getTime() - hoyDate.getTime();
+                const fechaPagoDate = new Date(cuota.fechaPago + 'T00:00:00');
+                fechaPagoDate.setHours(0, 0, 0, 0); // Medianoche
+                const diffTime = fechaPagoDate.getTime() - hoyDate.getTime();
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 return diffDays >= 0 && diffDays <= 7;
               });
 
               if (cuotaProxima) {
-                const diffTime = new Date(cuotaProxima.fechaPago).getTime() - hoyDate.getTime();
+                const fechaPagoDate = new Date(cuotaProxima.fechaPago + 'T00:00:00');
+                fechaPagoDate.setHours(0, 0, 0, 0);
+                const diffTime = fechaPagoDate.getTime() - hoyDate.getTime();
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                const index = cuotasOrdenadas.indexOf(cuotaProxima); // índice ordinal
+                const index = cuotasOrdenadas.indexOf(cuotaProxima);
+
                 cliente.cuotaPendienteTexto = diffDays === 0
                   ? `Hoy vence la ${this.ordinal(index + 1)} cuota`
                   : `Falta ${diffDays} día${diffDays === 1 ? '' : 's'} para vencerse la ${this.ordinal(index + 1)} cuota`;
@@ -80,19 +86,24 @@ export class ClienteListComponent implements OnInit, OnDestroy {
                 // Cuota vencida
                 const cuotaVencida = cuotasOrdenadas.find((cuota) => {
                   if (cuota.estado !== 'PENDIENTE') return false;
-                  return new Date(cuota.fechaPago).getTime() < hoyDate.getTime();
+                  const fechaPagoDate = new Date(cuota.fechaPago + 'T00:00:00');
+                  fechaPagoDate.setHours(0, 0, 0, 0);
+                  return fechaPagoDate.getTime() < hoyDate.getTime();
                 });
 
                 if (cuotaVencida) {
-                  const diffTime = hoyDate.getTime() - new Date(cuotaVencida.fechaPago).getTime();
+                  const fechaPagoDate = new Date(cuotaVencida.fechaPago + 'T00:00:00');
+                  fechaPagoDate.setHours(0, 0, 0, 0);
+                  const diffTime = hoyDate.getTime() - fechaPagoDate.getTime();
                   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                  const index = cuotasOrdenadas.indexOf(cuotaVencida); // índice ordinal
+                  const index = cuotasOrdenadas.indexOf(cuotaVencida);
+
                   cliente.cuotaPendienteTexto = `Venció la ${this.ordinal(index + 1)} cuota hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
                 }
               }
+            } else {
+              cliente.estadoPrestamoMasReciente = 'SIN_PRESTAMO';
             }
-          } else {
-            cliente.estadoPrestamoMasReciente = 'SIN_PRESTAMO';
           }
         });
 
