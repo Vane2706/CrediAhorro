@@ -81,7 +81,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
 
                 cliente.cuotaPendienteTexto = diffDays === 0
                   ? `Hoy vence la ${this.ordinal(index + 1)} cuota`
-                  : `Falta ${diffDays} día${diffDays === 1 ? '' : 's'} para vencerse la ${this.ordinal(index + 1)} cuota`;
+                  : `En ${diffDays} día${diffDays === 1 ? '' : 's'} se vence la ${this.ordinal(index + 1)} cuota`;
               } else {
                 // Cuota vencida
                 const cuotaVencida = cuotasOrdenadas.find((cuota) => {
@@ -98,7 +98,7 @@ export class ClienteListComponent implements OnInit, OnDestroy {
                   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
                   const index = cuotasOrdenadas.indexOf(cuotaVencida);
 
-                  cliente.cuotaPendienteTexto = `Venció la ${this.ordinal(index + 1)} cuota hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
+                  cliente.cuotaPendienteTexto = `La ${this.ordinal(index + 1)} cuota venció hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
                 }
               }
             } else {
