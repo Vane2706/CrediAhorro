@@ -14,8 +14,11 @@
       <!-- Contenedor padre que coloca las alertas a izquierda y derecha -->
       <div class="d-flex justify-content-between mb-3">
         <!-- Alerta a la izquierda -->
-        <div *ngIf="mensajeVencimiento" class="alert alert-danger d-flex align-items-center gap-2 mb-0">
-
+        <div
+          *ngIf="mensajeVencimiento"
+          class="alert d-flex align-items-center gap-2 mb-0"
+          [ngClass]="mensajeVencimiento.includes('cuota pagada') ? 'alert-info' : 'alert-danger'"
+        >
           {{ mensajeVencimiento }}
         </div>
 

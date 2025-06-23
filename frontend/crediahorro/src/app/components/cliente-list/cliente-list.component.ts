@@ -99,6 +99,18 @@ export class ClienteListComponent implements OnInit, OnDestroy {
                   const index = cuotasOrdenadas.indexOf(cuotaVencida);
 
                   cliente.cuotaPendienteTexto = `La ${this.ordinal(index + 1)} cuota venció hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
+                } else {
+                  const cuotasPagadas = cuotasOrdenadas.filter(c => c.estado === 'PAGADA');
+                  if (cuotasPagadas.length > 0) {
+                    const lastPagada = cuotasPagadas[cuotasPagadas.length - 1];
+                    const indexLastPagada = cuotasOrdenadas.indexOf(lastPagada);
+
+                    // solo mostramos si hay cuotas pendientes
+                    const hayPendientes = cuotasOrdenadas.some(c => c.estado === 'PENDIENTE');
+                    if (hayPendientes) {
+                      cliente.cuotaPendienteTexto = `${this.ordinal(indexLastPagada + 1)} cuota pagada`;
+                    }
+                  }
                 }
               }
             } else {

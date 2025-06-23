@@ -16,9 +16,12 @@
           <div class="badge-container position-absolute top-0 start-0 w-100 d-flex justify-content-between p-2">
     <span
       *ngIf="cliente.cuotaPendienteTexto"
-      class="badge bg-danger">
-      {{ cliente.cuotaPendienteTexto }}
-    </span>
+      class="badge"
+      [ngClass]="cliente.cuotaPendienteTexto.includes('cuota pagada') ? 'bg-info' : 'bg-danger'"
+    >
+  {{ cliente.cuotaPendienteTexto }}
+</span>
+
             <span
               *ngIf="cliente.estadoPrestamoMasReciente !== 'SIN_PRESTAMO'"
               class="badge"

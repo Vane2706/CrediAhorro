@@ -16,11 +16,13 @@
   font-weight: 500;
   font-size: 0.95rem;
   backdrop-filter: blur(6px); /* efecto glass */
+  pointer-events: none;
 }
 
 .custom-alert.show {
   opacity: 1;
   transform: translateX(0);
+  pointer-events: auto;
 }
 
 /* Tipos de alerta */

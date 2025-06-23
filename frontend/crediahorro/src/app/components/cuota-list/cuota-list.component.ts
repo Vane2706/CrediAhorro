@@ -94,7 +94,19 @@ export class CuotaListComponent implements OnInit {
           const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
           const index = cuotasOrdenadas.indexOf(cuotaVencida);
           this.mensajeVencimiento = `Venció la ${this.ordinal(index + 1)} cuota hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
-        }
+        } else {
+          const cuotasPagadas = cuotasOrdenadas.filter(c => c.estado === 'PAGADA');
+            if (cuotasPagadas.length > 0) {
+              const lastPagada = cuotasPagadas[cuotasPagadas.length - 1];
+              const indexLastPagada = cuotasOrdenadas.indexOf(lastPagada);
+
+              // solo mostramos si hay cuotas pendientes
+              const hayPendientes = cuotasOrdenadas.some(c => c.estado === 'PENDIENTE');
+              if (hayPendientes) {
+                this.mensajeVencimiento = `${this.ordinal(indexLastPagada + 1)} cuota pagada`;
+              }
+            }
+          }
       }
     });
   }
