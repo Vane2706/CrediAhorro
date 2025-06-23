@@ -32,6 +32,14 @@ public class ClienteController {
         return clienteOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping(path = "/buscar")
+    public List<String> buscarClientes(@RequestParam String nombre) {
+        return clienteService.buscarClientesPorNombre(nombre)
+                .stream()
+                .map(Cliente::getNombre) // solo devolver el nombre
+                .toList();
+    }
+
     // POST /clientes
     @PostMapping
     public ResponseEntity<Cliente> guardarCliente(@RequestBody Cliente cliente) {

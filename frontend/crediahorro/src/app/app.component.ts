@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BusquedaService } from './services/busqueda.service';
 import { AuthService } from './services/auth.service';
+import { ClienteService } from './services/cliente.service';
 import { NotificationService } from '../app/services/notification.service';
 import { AlertComponent } from './components/alert/alert.component';
 
@@ -43,18 +44,27 @@ import { AlertComponent } from './components/alert/alert.component';
               </li>
             </ul>
 
-            <form
-              class="d-flex me-3"
-              *ngIf="isClientesRoute()"
-              (submit)="onBuscarCliente($event)"
-            >
-              <input
-                class="form-control me-2"
-                id="buscadorInput"
-                type="search"
-                placeholder="Buscar Nombre"
-                aria-label="Search"
-              />
+            <form class="d-flex me-3 gap-2" *ngIf="isClientesRoute()" (submit)="onBuscarCliente($event)">
+              <div class="position-relative w-100">
+                <input
+                  class="form-control me-3"
+                  id="buscadorInput"
+                  type="search"
+                  placeholder="Buscar Nombre"
+                  aria-label="Search"
+                  (input)="onInputCliente($event)" />
+
+                <!-- Sugerencias -->
+                <ul *ngIf="sugerenciasGlobales.length > 0"
+                    class="list-group position-absolute mt-1 w-100 shadow"
+                    style="z-index: 1000; cursor: pointer;">
+                  <li *ngFor="let sug of sugerenciasGlobales"
+                      class="list-group-item list-group-item-action"
+                      (click)="seleccionarSugerenciaGlobal(sug)">
+                    {{ sug }}
+                  </li>
+                </ul>
+              </div>
               <button class="btn btn-outline-light" type="submit">
                 <i class="bi bi-search"></i>
               </button>
@@ -195,12 +205,14 @@ import { AlertComponent } from './components/alert/alert.component';
 export class AppComponent implements OnInit {
   username: string | null = null;
   currentUrl: string = '';
+  sugerenciasGlobales: string[] = [];
 
   constructor(
     private busquedaService: BusquedaService,
     private authService: AuthService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private clienteService: ClienteService
   ) {
     this.router.events.subscribe(() => {
       this.currentUrl = this.router.url;
@@ -236,6 +248,24 @@ export class AppComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/auth']);
     this.notificationService.show('success', 'Sesión cerrada con éxito.');
+  }
+
+  onInputCliente(event: Event) {
+    const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    if (value.length >= 2) {
+      this.clienteService.buscarClientes(value).subscribe(nombres => {
+        this.sugerenciasGlobales = nombres;
+      });
+    } else {
+      this.sugerenciasGlobales = [];
+    }
+  }
+
+  seleccionarSugerenciaGlobal(nombre: string) {
+    const input = document.getElementById('buscadorInput') as HTMLInputElement;
+    input.value = nombre;
+    this.sugerenciasGlobales = [];
+    this.busquedaService.buscar(nombre.toLowerCase());
   }
 }
 

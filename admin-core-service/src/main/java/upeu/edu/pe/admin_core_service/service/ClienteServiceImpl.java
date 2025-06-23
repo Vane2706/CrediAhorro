@@ -39,6 +39,11 @@ public class ClienteServiceImpl implements ClienteService{
     }
 
     @Override
+    public List<Cliente> buscarClientesPorNombre(String nombreParcial) {
+        return clienteRepository.findByNombreStartingWith(nombreParcial);
+    }
+
+    @Override
     public void generarCuotas(Prestamo prestamo) {
         double monto = prestamo.getMonto();
         double tasa = prestamo.getTasaInteresMensual() / 100; // convertir a decimal

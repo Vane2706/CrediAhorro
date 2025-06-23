@@ -18,6 +18,7 @@ export class ReporteComponent implements OnInit {
   estado: string = 'PAGADO';
   estadosDisponibles: string[] = [];
   resultadoReporte: string | null = null;
+  sugerencias: string[] = [];
 
   constructor(private reportService: ReportService) {}
 
@@ -55,5 +56,20 @@ export class ReporteComponent implements OnInit {
           alert('Error al generar el reporte.');
         }
       });
+  }
+
+  buscarSugerencias(): void {
+    if (this.nombre.length >= 2) { // solo buscar a partir de 2 letras
+      this.reportService.buscarClientes(this.nombre).subscribe((nombres) => {
+        this.sugerencias = nombres;
+      });
+    } else {
+      this.sugerencias = [];
+    }
+  }
+
+  seleccionarSugerencia(nombreSeleccionado: string): void {
+    this.nombre = nombreSeleccionado;
+    this.sugerencias = [];
   }
 }

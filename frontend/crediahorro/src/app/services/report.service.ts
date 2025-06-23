@@ -19,4 +19,9 @@ export class ReportService {
 
     return this.http.get(this.baseUrl + '/generar', { params, responseType: 'text' });
   }
+
+  buscarClientes(nombre: string): Observable<string[]> {
+    const params = new HttpParams().set('nombre', nombre);
+    return this.http.get<string[]>(`${environment.apiUrl}/admin-service/clientes/buscar`, { params });
+  }
 }
