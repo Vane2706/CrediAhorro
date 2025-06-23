@@ -9,15 +9,18 @@ public class Cuota {
     private LocalDate fechaPago;
     private double montoCuota;
     private String estado; // PENDIENTE o PAGADA
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fechaPagada;
 
     public Cuota() {
     }
 
-    public Cuota(Long id, LocalDate fechaPago, double montoCuota, String estado) {
+    public Cuota(Long id, LocalDate fechaPago, double montoCuota, String estado, LocalDate fechaPagada) {
         this.id = id;
         this.fechaPago = fechaPago;
         this.montoCuota = montoCuota;
         this.estado = estado;
+        this.fechaPagada = fechaPagada;
     }
 
     public Long getId() {
@@ -52,11 +55,20 @@ public class Cuota {
         this.montoCuota = montoCuota;
     }
 
+    public LocalDate getFechaPagada() {
+        return fechaPagada;
+    }
+
+    public void setFechaPagada(LocalDate fechaPagada) {
+        this.fechaPagada = fechaPagada;
+    }
+
     public static class Builder {
         private Long id;
         private LocalDate fechaPago;
         private double montoCuota;
         private String estado;
+        private LocalDate fechaPagada;
 
         public Builder id(Long id) {
             this.id = id;
@@ -78,8 +90,13 @@ public class Cuota {
             return this;
         }
 
+        public Builder fechaPagada(LocalDate fechaPagada) {
+            this.fechaPagada = fechaPagada;
+            return this;
+        }
+
         public Cuota build() {
-            return new Cuota(id, fechaPago, montoCuota, estado);
+            return new Cuota(id, fechaPago, montoCuota, estado, fechaPagada);
         }
     }
 

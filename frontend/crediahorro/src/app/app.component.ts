@@ -36,7 +36,7 @@ import { AlertComponent } from './components/alert/alert.component';
                 <a class="nav-link" routerLink="/clientes" routerLinkActive="active">Clientes</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" routerLink="/reportes" routerLinkActive="active">Reportes</a>
+                <a class="nav-link" routerLink="/reportes" routerLinkActive="active">Historial Crediticio</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" routerLink="/graficos" routerLinkActive="active">Gráficos</a>

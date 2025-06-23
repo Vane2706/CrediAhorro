@@ -7,7 +7,8 @@ spring:
     console:
       enabled: true
   config:
-    import: "configserver:http://localhost:8888"
+    #import: "configserver:http://localhost:8888"
+    import: configserver:${CONFIG_SERVER_HOST}
 
   datasource:
     url: jdbc:postgresql://localhost:5432/credi
@@ -39,4 +40,5 @@ eureka:
     instance-id: "${spring.application.name}:${random.value}"
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      #defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL}

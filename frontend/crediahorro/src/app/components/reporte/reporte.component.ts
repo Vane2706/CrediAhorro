@@ -15,7 +15,7 @@ import { ViewEncapsulation } from '@angular/core';
 export class ReporteComponent implements OnInit {
   nombre: string = '';
   tipo: string = 'prestamos';
-  estado: string = 'ACTIVO';
+  estado: string = 'PAGADO';
   estadosDisponibles: string[] = [];
   resultadoReporte: string | null = null;
 
@@ -26,11 +26,11 @@ export class ReporteComponent implements OnInit {
   }
 
   actualizarEstados(): void {
-    if (this.tipo === 'prestamos') {
-      this.estadosDisponibles = ['ACTIVO', 'PAGADO'];
+    if (this.tipo === 'cuotas') {
+      this.estadosDisponibles = ['PAGADA'];
       this.estado = this.estadosDisponibles[0];
-    } else if (this.tipo === 'cuotas') {
-      this.estadosDisponibles = ['PENDIENTE', 'PAGADA'];
+    } else if (this.tipo === 'prestamos') {
+      this.estadosDisponibles = ['PAGADO'];
       this.estado = this.estadosDisponibles[0];
     }
   }
