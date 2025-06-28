@@ -2,9 +2,12 @@ package upeu.edu.pe.admin_core_service.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import upeu.edu.pe.admin_core_service.configs.NotificacionClient;
+import upeu.edu.pe.admin_core_service.dto.NotificacionDto;
 import upeu.edu.pe.admin_core_service.entities.Cliente;
 import upeu.edu.pe.admin_core_service.service.ClienteService;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +16,11 @@ import java.util.Optional;
 public class ClienteController {
 
     private final ClienteService clienteService;
+    private final NotificacionClient notificacionClient;
 
-    public ClienteController(ClienteService clienteService) {
+    public ClienteController(ClienteService clienteService, NotificacionClient notificacionClient) {
         this.clienteService = clienteService;
+        this.notificacionClient = notificacionClient;
     }
 
     // GET /clientes
@@ -44,6 +49,16 @@ public class ClienteController {
     @PostMapping
     public ResponseEntity<Cliente> guardarCliente(@RequestBody Cliente cliente) {
         Cliente nuevoCliente = clienteService.guardarCliente(cliente);
+        // Crear el DTO de notificación
+        NotificacionDto notificacion = new NotificacionDto();
+        notificacion.setTelefono(cliente.getTelefonoWhatsapp());
+        notificacion.setNombre(cliente.getNombre());
+        notificacion.setTipoMensaje("PRESTAMO"); // o lo que aplique
+        notificacion.setFechaPago(LocalDate.now().plusDays(30)); // simulado
+
+
+        // Llamar al servicio de notificación
+        notificacionClient.notificarPrestamo(notificacion);
         return ResponseEntity.ok(nuevoCliente);
     }
 

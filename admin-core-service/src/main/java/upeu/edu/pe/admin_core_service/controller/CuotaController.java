@@ -3,6 +3,7 @@ package upeu.edu.pe.admin_core_service.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import upeu.edu.pe.admin_core_service.configs.NotificacionClient;
 import upeu.edu.pe.admin_core_service.entities.Cuota;
 import upeu.edu.pe.admin_core_service.entities.Prestamo;
 import upeu.edu.pe.admin_core_service.repository.PrestamoRepository;
@@ -20,15 +21,14 @@ public class CuotaController {
     private final CuotaService cuotaService;
     private final CuotaRepository cuotaRepository;
     private final PagoAdelantadoService pagoAdelantadoService;
+    private final NotificacionClient notificacionClient;
 
-    public CuotaController(PrestamoRepository prestamoRepository,
-                               CuotaService cuotaService,
-                               CuotaRepository cuotaRepository,
-                               PagoAdelantadoService pagoAdelantadoService) {
+    public CuotaController(PrestamoRepository prestamoRepository, CuotaService cuotaService, CuotaRepository cuotaRepository, PagoAdelantadoService pagoAdelantadoService, NotificacionClient notificacionClient) {
         this.prestamoRepository = prestamoRepository;
         this.cuotaService = cuotaService;
         this.cuotaRepository = cuotaRepository;
         this.pagoAdelantadoService = pagoAdelantadoService;
+        this.notificacionClient = notificacionClient;
     }
 
     @GetMapping(path = "/prestamo/{prestamoId}")
@@ -77,4 +77,6 @@ public class CuotaController {
         Cuota cuota = cuotaService.pagarCuotaAvanzado(cuotaId, tipoPago);
         return ResponseEntity.ok(cuota);
     }
+
+
 }

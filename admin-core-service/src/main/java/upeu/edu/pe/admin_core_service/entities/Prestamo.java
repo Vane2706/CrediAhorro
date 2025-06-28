@@ -99,6 +99,7 @@ public class Prestamo {
         this.cuotas = cuotas;
     }
 
+
     @Override
     public String toString() {
         return "Prestamo{" +

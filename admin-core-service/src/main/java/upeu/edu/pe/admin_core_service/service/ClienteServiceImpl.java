@@ -2,6 +2,8 @@ package upeu.edu.pe.admin_core_service.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import upeu.edu.pe.admin_core_service.configs.NotificacionClient;
+import upeu.edu.pe.admin_core_service.dto.NotificacionDto;
 import upeu.edu.pe.admin_core_service.entities.Cliente;
 import upeu.edu.pe.admin_core_service.entities.Cuota;
 import upeu.edu.pe.admin_core_service.entities.Prestamo;
@@ -17,8 +19,10 @@ import java.util.Optional;
 public class ClienteServiceImpl implements ClienteService{
 
     private ClienteRepository clienteRepository;
+    private final NotificacionClient notificacionClient;
 
-    public ClienteServiceImpl(ClienteRepository clienteRepository) {
+    public ClienteServiceImpl(NotificacionClient notificacionClient, ClienteRepository clienteRepository) {
+        this.notificacionClient = notificacionClient;
         this.clienteRepository = clienteRepository;
     }
 
@@ -34,8 +38,17 @@ public class ClienteServiceImpl implements ClienteService{
             prestamo.setEstado("ACTIVO");
             prestamo.setFechaCreacion(LocalDate.now());
             generarCuotas(prestamo);
-        });
-        return clienteRepository.save(cliente);
+        }); // Guardar cliente con préstamos y cuotas
+        Cliente nuevoCliente = clienteRepository.save(cliente);
+
+        //  Enviar notificación al notificacion-service vía Feign
+        NotificacionDto notiDto = new NotificacionDto();
+        notiDto.setNombre(nuevoCliente.getNombre());
+        notiDto.setTelefono(nuevoCliente.getTelefonoWhatsapp()); // Asegúrate que tenga teléfono
+
+        notificacionClient.notificarPrestamo(notiDto);
+
+        return nuevoCliente;
     }
 
     @Override
