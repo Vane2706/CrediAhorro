@@ -1,22 +1,16 @@
 package upeu.edu.pe.admin_core_service.service;
 
 import jakarta.transaction.Transactional;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import upeu.edu.pe.admin_core_service.configs.NotificacionClient;
-import upeu.edu.pe.admin_core_service.dto.NotificacionDto;
-import upeu.edu.pe.admin_core_service.entities.Cliente;
 import upeu.edu.pe.admin_core_service.entities.Cuota;
 import upeu.edu.pe.admin_core_service.entities.Prestamo;
 import upeu.edu.pe.admin_core_service.repository.CuotaRepository;
 import upeu.edu.pe.admin_core_service.repository.PrestamoRepository;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,12 +18,10 @@ public class CuotaServiceImpl implements CuotaService {
 
     private final CuotaRepository cuotaRepository;
     private final PrestamoRepository prestamoRepository;
-    private final NotificacionClient notificacionClient;
 
-    public CuotaServiceImpl(CuotaRepository cuotaRepository, PrestamoRepository prestamoRepository, NotificacionClient notificacionClient) {
+    public CuotaServiceImpl(CuotaRepository cuotaRepository, PrestamoRepository prestamoRepository) {
         this.cuotaRepository = cuotaRepository;
         this.prestamoRepository = prestamoRepository;
-        this.notificacionClient = notificacionClient;
     }
 
     @Override
@@ -136,14 +128,6 @@ public class CuotaServiceImpl implements CuotaService {
         }
     }
 
-    @Override
-    public List<NotificacionDto> obtenerCuotasPorVencer() {
-        return cuotaRepository.findCuotasPorFecha(LocalDate.now().plusDays(1));
-    }
 
-    @Override
-    public List<NotificacionDto> obtenerCuotasVencidas() {
-        return cuotaRepository.findCuotasVencidas(LocalDate.now());
-    }
 
 }

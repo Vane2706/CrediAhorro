@@ -1,6 +1,7 @@
 package upeu.edu.pe.notificacion_service.controller;
 
-import upeu.edu.pe.notificacion_service.dto.NotificacionDto;
+import org.springframework.http.ResponseEntity;
+import upeu.edu.pe.notificacion_service.dto.NotificacionDTO;
 import upeu.edu.pe.notificacion_service.service.TwilioService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,22 +15,31 @@ public class NotificacionController {
         this.twilioService = twilioService;
     }
 
-    // NotificacionController.java
-    @PostMapping("/prestamo")
-    public void notificarPrestamo(@RequestBody NotificacionDto dto) {
-        String mensaje = "Hola " + dto.getNombre() + ", tu préstamo ha sido generado exitosamente.";
-        twilioService.enviarMensaje(dto.getTelefono(), mensaje);
+    @PostMapping("/recordatorio-cuota")
+    public ResponseEntity<Void> recibirNotificacion(@RequestBody NotificacionDTO dto) {
+
+
+        String mensaje = String.format(
+                "🔔 *Recordatorio de Pago de Cuota*\n\n" +
+                        "👤 *Cliente:* %s\n" +
+                        "📞 *Teléfono:* %s\n\n" +
+                        "💳 *Préstamo ID:* %d\n" +
+                        "💰 *Monto del préstamo:* S/ %.2f\n\n" +
+                        "📅 *Fecha de vencimiento:* %s\n" +
+                        "💵 *Monto de la cuota:* S/ %.2f\n\n",
+                dto.getNombre(), dto.getTelefono(),
+                dto.getPrestamoId(), dto.getMonto_prestamo(),
+                dto.getFechaPago(), dto.getMonto_cuota()
+        );
+
+                System.out.println("[DEBUG][NOTIFICACION] Recibida notificación de admin-core: " + dto);
+
+
+
+        twilioService.enviarMensaje("+51919607831", mensaje);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/recordatorio")
-    public void notificarRecordatorio(@RequestBody NotificacionDto dto) {
-        String mensaje = "Hola " + dto.getNombre()+ ", te recordamos que tu pago vence el " + dto.getFechaPago()+ ". ¡Evita intereses!";
-        twilioService.enviarMensaje(dto.getTelefono(), mensaje);
-    }
-
-    @PostMapping("/advertencia")
-    public void notificarAdvertencia(@RequestBody NotificacionDto dto) {
-        String mensaje = "Hola " + dto.getNombre()+ ", te recordamos que tu cuota de" +dto.getMonto_cuota()+"vencio" +", el día"+ dto.getFechaPago();
-        twilioService.enviarMensaje(dto.getTelefono(), mensaje);
-    }
 }
+
+

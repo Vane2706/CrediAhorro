@@ -1,10 +1,8 @@
 package upeu.edu.pe.admin_core_service.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import upeu.edu.pe.admin_core_service.dto.NotificacionDto;
 import upeu.edu.pe.admin_core_service.entities.Cuota;
 
 import java.time.LocalDate;
@@ -27,21 +25,8 @@ public interface CuotaRepository extends JpaRepository<Cuota, Long> {
             "WHERE c.id = :cuotaId", nativeQuery = true)
     Long findPrestamoIdByCuotaId(@Param("cuotaId") Long cuotaId);
 
-    @Query("SELECT c FROM Cuota c " +
-            "WHERE c.fechaPago = :fecha AND c.estado <> 'PAGADO' AND " +
-            "c.id IN (" +
-            "SELECT cu.id FROM Prestamo p JOIN p.cuotas cu " +
-            "WHERE p.id IN (" +
-            "SELECT pr.id FROM Cliente cl JOIN cl.prestamos pr))")
-    List<NotificacionDto> findCuotasPorFecha(@Param("fecha") LocalDate fecha);
 
-    // Cuotas vencidas (para advertencia)
-    @Query("SELECT c FROM Cuota c " +
-            "WHERE c.fechaPago < :fecha AND c.estado <> 'PAGADO' AND " +
-            "c.id IN (" +
-            "SELECT cu.id FROM Prestamo p JOIN p.cuotas cu " +
-            "WHERE p.id IN (" +
-            "SELECT pr.id FROM Cliente cl JOIN cl.prestamos pr))")
-    List<NotificacionDto> findCuotasVencidas(@Param("fecha") LocalDate fecha);
+    // Agrega este si no lo tienes para buscar por estado y fecha
+    List<Cuota> findByEstadoAndFechaPago(String estado, LocalDate fechaPago);
+
 }
-

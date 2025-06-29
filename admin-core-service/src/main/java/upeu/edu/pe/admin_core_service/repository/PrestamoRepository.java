@@ -21,6 +21,9 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
 
     @Query("SELECT p FROM Prestamo p")
     List<Prestamo> findAllPrestamos();
+    // Si no tienes, crea uno así:
+    @Query(value = "SELECT id_clientes FROM prestamos WHERE id = :prestamoId", nativeQuery = true)
+    Long findClienteIdByPrestamoId(@Param("prestamoId") Long prestamoId);
 
 }
 
