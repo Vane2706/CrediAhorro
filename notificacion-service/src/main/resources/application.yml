@@ -6,12 +6,17 @@ spring:
 
 twilio:
   account:
+    #sid: AC2f33c7c845f02841be5a7868200fcc00
     sid: ${TWILIO_SID}
   auth:
+    #token: aa595e4c095fa7b463048582cd2b9440
     token: ${TWILIO_TOKEN}
   whatsapp:
     from: +14155238886
 eureka:
+  instance:
+    instance-id: "${spring.application.name}:${random.value}"
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      #defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL}

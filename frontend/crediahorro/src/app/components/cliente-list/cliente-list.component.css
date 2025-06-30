@@ -38,3 +38,17 @@
 .badge.bg-danger {
   font-weight: bold;
 }
+
+.btn-primary {
+  border-radius: 2rem;
+  font-weight: 600;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.pagination .page-link {
+  cursor: pointer;
+}
